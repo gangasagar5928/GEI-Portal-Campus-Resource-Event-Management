@@ -10,15 +10,13 @@ import {
   LogOut, 
   LogIn, 
   ShieldAlert, 
-  ChevronDown, 
   Sparkles,
   Clock
 } from 'lucide-react';
 
 export default function Navbar({ activeTab, setActiveTab, onOpenLogin }) {
-  const { currentUser, logout, switchUser, isAdmin, isCeo, isClubHead, isPublic } = useAuth();
+  const { currentUser, logout, isAdmin, isCeo, isClubHead, isPublic } = useAuth();
   const { requests, users, clubs } = useData();
-  const [showPersonaMenu, setShowPersonaMenu] = useState(false);
 
   // Badge counts
   const pendingAdminCount = requests.filter(r => r.status === 'Submitted' || r.status === 'Under Review').length;
@@ -165,150 +163,46 @@ export default function Navbar({ activeTab, setActiveTab, onOpenLogin }) {
             )}
           </nav>
 
-          {/* User Persona & Role Selector */}
-          <div className="flex items-center gap-3">
-            
-            {/* Quick Switch Dropdown for Evaluation */}
-            <div className="relative">
-              <button
-                onClick={() => setShowPersonaMenu(!showPersonaMenu)}
-                className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700/80 border border-slate-700 text-xs font-medium text-slate-200 transition-colors shadow-sm"
-                title="Switch active role / persona"
-              >
-                <div className={`w-2 h-2 rounded-full ${
-                  isAdmin ? 'bg-amber-400' :
-                  isCeo ? 'bg-purple-400' :
-                  isClubHead ? 'bg-emerald-400' : 'bg-slate-400'
-                }`} />
-                <div className="text-left hidden sm:block">
-                  <div className="font-semibold leading-tight flex items-center gap-1.5">
-                    {currentUser ? currentUser.name : 'Public Visitor'}
-                  </div>
-                  <div className="text-[10px] text-slate-400">
-                    {isAdmin ? 'Administrative Head' :
-                     isCeo ? 'CEO / Higher Approver' :
-                     isClubHead ? `${currentUser.clubName} Head` : 'Read-only Visitor'}
-                  </div>
-                </div>
-                <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
-              </button>
-
-              {/* Persona Switch Menu */}
-              {showPersonaMenu && (
-                <div className="absolute right-0 mt-2 w-72 bg-slate-800 border border-slate-700 rounded-xl shadow-2xl p-2 z-50 text-xs">
-                  <div className="px-2 py-1 text-[11px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-700/60 pb-1.5 mb-1.5">
-                    Switch Test Persona (PRD Roles)
-                  </div>
-
-                  {/* Admin: Ashish Nath Awasthi */}
-                  <button
-                    onClick={() => {
-                      const admin = users.find(u => u.role === 'ADMIN');
-                      if (admin) switchUser(admin);
-                      setActiveTab('admin-requests');
-                      setShowPersonaMenu(false);
-                    }}
-                    className={`w-full text-left p-2 rounded-lg flex items-start gap-2.5 transition-colors ${
-                      isAdmin ? 'bg-blue-600/20 text-blue-200 border border-blue-500/40' : 'hover:bg-slate-700/60 text-slate-300'
-                    }`}
-                  >
-                    <div className="w-6 h-6 rounded bg-amber-500/20 text-amber-300 font-bold flex items-center justify-center shrink-0">
-                      AH
-                    </div>
-                    <div>
-                      <div className="font-semibold text-white">Ashish Nath Awasthi</div>
-                      <div className="text-[11px] text-amber-400 font-medium">Administrative Head (Approver)</div>
-                      <div className="text-[10px] text-slate-400">Manage slots, approve/reject/clarify/forward</div>
-                    </div>
-                  </button>
-
-                  {/* CEO: Dhruv Galgotia */}
-                  <button
-                    onClick={() => {
-                      const ceo = users.find(u => u.role === 'CEO');
-                      if (ceo) switchUser(ceo);
-                      setActiveTab('ceo-approvals');
-                      setShowPersonaMenu(false);
-                    }}
-                    className={`w-full text-left p-2 rounded-lg flex items-start gap-2.5 transition-colors mt-1 ${
-                      isCeo ? 'bg-purple-600/20 text-purple-200 border border-purple-500/40' : 'hover:bg-slate-700/60 text-slate-300'
-                    }`}
-                  >
-                    <div className="w-6 h-6 rounded bg-purple-500/20 text-purple-300 font-bold flex items-center justify-center shrink-0">
-                      DG
-                    </div>
-                    <div>
-                      <div className="font-semibold text-white">Dhruv Galgotia</div>
-                      <div className="text-[11px] text-purple-400 font-medium">CEO (Higher Approver)</div>
-                      <div className="text-[10px] text-slate-400">Final sign-off for auditorium / exceptional</div>
-                    </div>
-                  </button>
-
-                  {/* Sample Club Heads */}
-                  <div className="px-2 pt-2 pb-1 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                    Authorized Club Heads (2026–27)
-                  </div>
-                  
-                  {users.filter(u => u.role === 'CLUB_HEAD').slice(0, 3).map(clubUser => (
-                    <button
-                      key={clubUser.uid}
-                      onClick={() => {
-                        switchUser(clubUser);
-                        setActiveTab('club-requests');
-                        setShowPersonaMenu(false);
-                      }}
-                      className={`w-full text-left p-2 rounded-lg flex items-start gap-2.5 transition-colors ${
-                        currentUser?.uid === clubUser.uid ? 'bg-emerald-600/20 text-emerald-200 border border-emerald-500/40' : 'hover:bg-slate-700/60 text-slate-300'
-                      }`}
-                    >
-                      <div className="w-6 h-6 rounded bg-emerald-500/20 text-emerald-300 font-bold flex items-center justify-center shrink-0">
-                        {clubUser.clubName.charAt(0)}
-                      </div>
-                      <div>
-                        <div className="font-semibold text-white">{clubUser.name}</div>
-                        <div className="text-[11px] text-emerald-400 font-medium">{clubUser.clubName} Club Head</div>
-                        <div className="text-[10px] text-slate-400">{clubUser.institutionalEmail}</div>
-                      </div>
-                    </button>
-                  ))}
-
-                  {/* Public Visitor */}
-                  <div className="border-t border-slate-700/60 mt-1 pt-1">
-                    <button
-                      onClick={() => {
-                        logout();
-                        setActiveTab('schedule');
-                        setShowPersonaMenu(false);
-                      }}
-                      className="w-full text-left p-2 rounded-lg flex items-center gap-2 hover:bg-slate-700/60 text-slate-300"
-                    >
-                      <Users className="w-4 h-4 text-slate-400" />
-                      <span>Public Visitor (Read-only Schedule)</span>
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Login / Logout Button */}
+          {/* User Profile & Auth Controls */}
+          <div className="flex items-center gap-2.5">
             {currentUser ? (
-              <button
-                onClick={logout}
-                className="p-2 text-slate-400 hover:text-red-400 hover:bg-slate-800 rounded-lg transition-colors"
-                title="Sign Out"
-              >
-                <LogOut className="w-4 h-4" />
-              </button>
+              <>
+                <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-800 border border-slate-700/80 text-xs shadow-xs">
+                  <div className={`w-2 h-2 rounded-full ${
+                    isAdmin ? 'bg-amber-400 ring-2 ring-amber-400/20' :
+                    isCeo ? 'bg-purple-400 ring-2 ring-purple-400/20' :
+                    isClubHead ? 'bg-emerald-400 ring-2 ring-emerald-400/20' : 'bg-slate-400'
+                  }`} />
+                  <div className="text-left hidden sm:block">
+                    <div className="font-bold text-white leading-tight">
+                      {currentUser.name}
+                    </div>
+                    <div className="text-[10px] text-slate-400">
+                      {isAdmin ? 'Administrative Head' :
+                       isCeo ? 'CEO Approver' :
+                       currentUser.clubName ? `${currentUser.clubName} Head` : 'Authorized Account'}
+                    </div>
+                  </div>
+                </div>
+
+                <button
+                  onClick={logout}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-rose-950/40 text-slate-300 hover:text-rose-400 border border-slate-700/80 text-xs font-semibold transition-colors"
+                  title="Sign Out"
+                >
+                  <LogOut className="w-3.5 h-3.5" />
+                  <span className="hidden sm:inline">Sign Out</span>
+                </button>
+              </>
             ) : (
               <button
                 onClick={onOpenLogin}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shadow-md transition-all"
+                className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shadow-md transition-all"
               >
                 <LogIn className="w-3.5 h-3.5" />
                 Sign In
               </button>
             )}
-
           </div>
 
         </div>
