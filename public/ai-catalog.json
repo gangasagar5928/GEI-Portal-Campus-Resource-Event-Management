@@ -1,0 +1,23 @@
+{
+  "$schema": "https://agenticresourcediscovery.org/spec/v1.json",
+  "name": "GEI Campus Resource & Event Management System",
+  "description": "API and resource portal for campus event scheduling, venue bookings, and equipment management at Galgotias Educational Institutions.",
+  "version": "1.0.0",
+  "url": "https://gei-campus-portal.web.app",
+  "resources": [
+    {
+      "id": "auditorium-schedule",
+      "name": "Auditorium Schedule",
+      "description": "Public read-only schedule of confirmed and pending campus events across GEI venues.",
+      "url": "https://gei-campus-portal.web.app/?tab=schedule",
+      "type": "schedule"
+    },
+    {
+      "id": "club-registry",
+      "name": "Student Council Club Registry",
+      "description": "Registry of 21 Student Council GCET clubs with authorized leadership seats.",
+      "url": "https://gei-campus-portal.web.app/?tab=schedule",
+      "type": "directory"
+    }
+  ]
+}
