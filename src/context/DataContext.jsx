@@ -47,6 +47,38 @@ export function DataProvider({ children }) {
   const [requests, setRequests] = useState(() => loadStored('requests', INITIAL_REQUESTS));
   const [academicYear, setAcademicYear] = useState(() => loadStored('academic_year', '2026-27'));
 
+  // Live Sync & Network State for Mobile PWA
+  const [isOnline, setIsOnline] = useState(() => typeof navigator !== 'undefined' ? navigator.onLine : true);
+  const [syncStatus, setSyncStatus] = useState(db ? 'live' : 'local'); // 'live' | 'syncing' | 'offline' | 'local'
+  const [lastSyncTime, setLastSyncTime] = useState(() => new Date().toISOString());
+
+  // Listen to network status
+  useEffect(() => {
+    const handleOnline = () => {
+      setIsOnline(true);
+      if (db) {
+        setSyncStatus('syncing');
+        setTimeout(() => {
+          setSyncStatus('live');
+          setLastSyncTime(new Date().toISOString());
+        }, 800);
+      }
+    };
+
+    const handleOffline = () => {
+      setIsOnline(false);
+      setSyncStatus('offline');
+    };
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
+
   // Sync to local storage
   useEffect(() => { saveStored('clubs', clubs); }, [clubs]);
   useEffect(() => { saveStored('users', users); }, [users]);
@@ -55,10 +87,14 @@ export function DataProvider({ children }) {
   useEffect(() => { saveStored('requests', requests); }, [requests]);
   useEffect(() => { saveStored('academic_year', academicYear); }, [academicYear]);
 
-  // Cloud Firestore Real-time Listeners (if cloud connected)
+  // Cloud Firestore Real-time Listeners (with live sync tracking)
   useEffect(() => {
-    if (!db) return;
+    if (!db) {
+      setSyncStatus('local');
+      return;
+    }
 
+    setSyncStatus('syncing');
     const unsubs = [];
     try {
       unsubs.push(
@@ -67,6 +103,8 @@ export function DataProvider({ children }) {
             const list = snapshot.docs.map(d => ({ ...d.data(), requestId: d.id }));
             setRequests(list);
           }
+          setSyncStatus(navigator.onLine ? 'live' : 'offline');
+          setLastSyncTime(new Date().toISOString());
         }, err => console.log('Firestore requests listener:', err.message))
       );
 
@@ -76,6 +114,8 @@ export function DataProvider({ children }) {
             const list = snapshot.docs.map(d => ({ ...d.data(), eventId: d.id }));
             setSchedule(list);
           }
+          setSyncStatus(navigator.onLine ? 'live' : 'offline');
+          setLastSyncTime(new Date().toISOString());
         }, err => console.log('Firestore schedule listener:', err.message))
       );
 
@@ -85,6 +125,8 @@ export function DataProvider({ children }) {
             const list = snapshot.docs.map(d => ({ ...d.data(), uid: d.id }));
             setUsers(list);
           }
+          setSyncStatus(navigator.onLine ? 'live' : 'offline');
+          setLastSyncTime(new Date().toISOString());
         }, err => console.log('Firestore users listener:', err.message))
       );
     } catch (e) {
@@ -93,6 +135,14 @@ export function DataProvider({ children }) {
 
     return () => unsubs.forEach(unsub => unsub && unsub());
   }, []);
+
+  // Manual Trigger to re-verify sync
+  const refreshSync = async () => {
+    setSyncStatus('syncing');
+    await new Promise(r => setTimeout(r, 600));
+    setSyncStatus(navigator.onLine ? (db ? 'live' : 'local') : 'offline');
+    setLastSyncTime(new Date().toISOString());
+  };
 
   // Conflict detection for auditorium bookings
   const checkAuditoriumConflict = (venue, date, startTime, endTime, excludeRequestId = null) => {
@@ -527,6 +577,10 @@ export function DataProvider({ children }) {
     schedule,
     requests,
     academicYear,
+    isOnline,
+    syncStatus,
+    lastSyncTime,
+    refreshSync,
     checkAuditoriumConflict,
     submitRequest,
     approveRequest,

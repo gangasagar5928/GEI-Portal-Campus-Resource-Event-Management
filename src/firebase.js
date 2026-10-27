@@ -1,6 +1,11 @@
 import { initializeApp, getApps, getApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
+import { 
+  getFirestore, 
+  initializeFirestore, 
+  persistentLocalCache, 
+  persistentMultipleTabManager 
+} from 'firebase/firestore';
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "AIzaSyBXnOqS9Z5meYeEN4FLC96pT66yM4HxQCw",
@@ -18,8 +23,19 @@ let db = null;
 try {
   app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
   auth = getAuth(app);
-  db = getFirestore(app);
-  console.log('[GEI System] Connected to live Cloud Firestore (gei-campus-portal).');
+  
+  // Enable persistent offline cache with multi-tab synchronization for mobile PWA
+  try {
+    db = initializeFirestore(app, {
+      localCache: persistentLocalCache({
+        tabManager: persistentMultipleTabManager()
+      })
+    });
+    console.log('[GEI System] Firestore initialized with IndexedDB offline persistence & multi-tab sync.');
+  } catch (cacheErr) {
+    db = getFirestore(app);
+    console.log('[GEI System] Firestore initialized (default cache):', cacheErr.message);
+  }
 } catch (err) {
   console.warn('[GEI System] Firebase initialization error:', err);
 }
