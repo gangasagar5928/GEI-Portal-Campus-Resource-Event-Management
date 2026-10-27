@@ -41,7 +41,7 @@ export default function AdminDashboard({ initialSubTab = 'requests' }) {
     forwardForApproval, 
     addScheduleEvent,
     deleteScheduleEvent,
-    mapClubHeadEmail, 
+    mapUserAccount, 
     toggleUserActive,
     resetUserPassword,
     rolloverAcademicYear,
@@ -57,9 +57,12 @@ export default function AdminDashboard({ initialSubTab = 'requests' }) {
   const [actionDialog, setActionDialog] = useState(null); // { type: 'APPROVE'|'REJECT'|'CLARIFY'|'FORWARD', request: req }
   const [actionComment, setActionComment] = useState('');
 
-  // Email Mapping Modal State
-  const [mappingModal, setMappingModal] = useState(null); // { clubId, headName, currentEmail }
+  // Account Mapping Modal State
+  const [mappingModal, setMappingModal] = useState(null); // { clubId, seatKey, headName, email, phone, role }
+  const [mappedName, setMappedName] = useState('');
   const [mappedEmail, setMappedEmail] = useState('');
+  const [mappedPhone, setMappedPhone] = useState('');
+  const [mappedRole, setMappedRole] = useState('CLUB_HEAD');
   const [tempPassword, setTempPassword] = useState('Galgotias@2026');
 
   // Manual Schedule Slot State
@@ -118,14 +121,26 @@ export default function AdminDashboard({ initialSubTab = 'requests' }) {
     setSelectedRequestForModal(null);
   };
 
-  // Save Mapped Institutional Email
+  // Save Mapped Institutional Account
   const handleSaveEmailMapping = (e) => {
     e.preventDefault();
-    if (!mappingModal || !mappedEmail.trim()) return;
+    if (!mappingModal || !mappedEmail.trim() || !mappedName.trim()) return;
 
-    mapClubHeadEmail(mappingModal.clubId, mappingModal.headName, mappedEmail.trim(), tempPassword.trim());
+    mapUserAccount({
+      clubId: mappingModal.clubId,
+      seatKey: mappingModal.seatKey,
+      name: mappedName.trim(),
+      institutionalEmail: mappedEmail.trim(),
+      phone: mappedPhone.trim(),
+      password: tempPassword.trim(),
+      role: mappedRole
+    });
+
     setMappingModal(null);
+    setMappedName('');
     setMappedEmail('');
+    setMappedPhone('');
+    setMappedRole('CLUB_HEAD');
   };
 
   // Add Manual Schedule Event
@@ -163,7 +178,7 @@ export default function AdminDashboard({ initialSubTab = 'requests' }) {
             <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-400 text-slate-950 uppercase tracking-wider">
               Administrative Head
             </span>
-            <span className="text-xs text-slate-400">Ashish Nath Awasthi</span>
+            <span className="text-xs text-slate-400">{currentUser?.name || 'Administrator'}</span>
             <span className="text-slate-600">•</span>
             <span className="text-xs text-blue-400 font-medium">Session: {academicYear}</span>
           </div>
@@ -383,7 +398,7 @@ export default function AdminDashboard({ initialSubTab = 'requests' }) {
                               setActionComment('Forwarding to CEO for final review.');
                             }}
                             className="px-2.5 py-1.5 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-xs font-bold flex items-center gap-1 shadow-xs transition-colors"
-                            title="Forward to CEO (Dhruv Galgotia)"
+                            title="Forward to Higher Approver / CEO"
                           >
                             <SendHorizontal className="w-3 h-3" />
                             Forward to CEO
@@ -563,14 +578,62 @@ export default function AdminDashboard({ initialSubTab = 'requests' }) {
               </p>
             </div>
 
-            <button
-              onClick={() => setShowRolloverModal(true)}
-              className="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-colors"
-            >
-              <RotateCcw className="w-3.5 h-3.5" />
-              Annual Rollover ({academicYear})
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => {
+                  setMappingModal({ clubId: '', seatKey: '', headName: '' });
+                  setMappedName('');
+                  setMappedEmail('');
+                  setMappedPhone('');
+                  setMappedRole('ADMIN');
+                }}
+                className="px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 transition-colors shadow-xs"
+              >
+                <Plus className="w-3.5 h-3.5" />
+                + Provision Executive / Admin Account
+              </button>
+              <button
+                onClick={() => setShowRolloverModal(true)}
+                className="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-colors"
+              >
+                <RotateCcw className="w-3.5 h-3.5" />
+                Annual Rollover ({academicYear})
+              </button>
+            </div>
           </div>
+
+          {/* Institutional Leadership & Administrators List */}
+          {users.filter(u => u.role === 'ADMIN' || u.role === 'CEO').length > 0 && (
+            <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">
+                Executive Leadership & Administrators ({users.filter(u => u.role === 'ADMIN' || u.role === 'CEO').length})
+              </h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                {users.filter(u => u.role === 'ADMIN' || u.role === 'CEO').map(admin => (
+                  <div key={admin.uid} className="p-3 rounded-xl bg-slate-50 border border-slate-200/80 text-xs flex items-start justify-between">
+                    <div>
+                      <div className="font-bold text-slate-900">{admin.name}</div>
+                      <div className="text-[11px] text-blue-700 font-medium">{admin.institutionalEmail}</div>
+                      {admin.phone && <div className="text-[11px] text-slate-600">📞 {admin.phone}</div>}
+                      <span className={`inline-block mt-1 px-2 py-0.5 rounded text-[10px] font-bold ${
+                        admin.role === 'CEO' ? 'bg-purple-100 text-purple-800' : 'bg-amber-100 text-amber-800'
+                      }`}>
+                        {admin.role === 'CEO' ? 'CEO / Higher Approver' : 'Administrative Head'}
+                      </span>
+                    </div>
+                    <button
+                      onClick={() => toggleUserActive(admin.uid)}
+                      className={`px-1.5 py-0.2 rounded text-[10px] font-bold ${
+                        admin.active ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'
+                      }`}
+                    >
+                      {admin.active ? 'Active' : 'Disabled'}
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* 21 Clubs Table */}
           <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
@@ -580,15 +643,15 @@ export default function AdminDashboard({ initialSubTab = 'requests' }) {
                   <tr>
                     <th className="p-3.5 w-12 text-center">#</th>
                     <th className="p-3.5">Club Name</th>
-                    <th className="p-3.5">Club Head 1 & Institutional Account</th>
-                    <th className="p-3.5">Club Head 2 & Institutional Account</th>
+                    <th className="p-3.5">Club Head 1 & Contact Details</th>
+                    <th className="p-3.5">Club Head 2 & Contact Details</th>
                     <th className="p-3.5">Academic Session</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
                   {clubs.map((club, idx) => {
-                    const head1User = users.find(u => u.name === club.head1);
-                    const head2User = users.find(u => u.name === club.head2);
+                    const head1User = users.find(u => u.clubId === club.id && (u.name === club.head1 || !club.head1));
+                    const head2User = users.find(u => u.clubId === club.id && u.name === club.head2 && club.head2);
 
                     return (
                       <tr key={club.id} className="hover:bg-slate-50/70">
@@ -599,90 +662,102 @@ export default function AdminDashboard({ initialSubTab = 'requests' }) {
 
                         {/* Head 1 */}
                         <td className="p-3.5">
-                          <div className="space-y-1">
-                            <div className="font-semibold text-slate-800">{club.head1}</div>
-                            {head1User?.institutionalEmail ? (
-                              <div className="flex items-center gap-2">
-                                <span className="text-[11px] text-emerald-700 font-medium">
-                                  {head1User.institutionalEmail}
-                                </span>
-                                <button
-                                  onClick={() => toggleUserActive(head1User.uid)}
-                                  className={`px-1.5 py-0.2 rounded text-[10px] font-bold ${
-                                    head1User.active ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'
-                                  }`}
-                                  title="Toggle active status"
-                                >
-                                  {head1User.active ? 'Active' : 'Disabled'}
-                                </button>
-                                <button
-                                  onClick={() => {
-                                    resetUserPassword(head1User.uid);
-                                    alert(`Temporary password reset for ${head1User.name} to Galgotias@2026`);
-                                  }}
-                                  className="text-slate-400 hover:text-blue-600"
-                                  title="Reset Password"
-                                >
-                                  <Key className="w-3 h-3" />
-                                </button>
-                              </div>
-                            ) : (
-                              <button
-                                onClick={() => {
-                                  setMappingModal({ clubId: club.id, headName: club.head1, currentEmail: '' });
-                                  setMappedEmail('');
-                                }}
-                                className="px-2 py-1 rounded bg-blue-50 text-blue-600 hover:bg-blue-100 font-bold text-[11px] inline-flex items-center gap-1"
-                              >
-                                <Plus className="w-3 h-3" />
-                                Map Institutional Email
-                              </button>
-                            )}
-                          </div>
+                          {club.head1 ? (
+                            <div className="space-y-1">
+                              <div className="font-semibold text-slate-800">{club.head1}</div>
+                              {head1User && (
+                                <div className="space-y-0.5 text-[11px]">
+                                  <div className="text-emerald-700 font-medium">{head1User.institutionalEmail}</div>
+                                  {head1User.phone && <div className="text-slate-600">📞 {head1User.phone}</div>}
+                                  <div className="flex items-center gap-2 mt-1">
+                                    <button
+                                      onClick={() => toggleUserActive(head1User.uid)}
+                                      className={`px-1.5 py-0.2 rounded text-[10px] font-bold ${
+                                        head1User.active ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'
+                                      }`}
+                                      title="Toggle active status"
+                                    >
+                                      {head1User.active ? 'Active' : 'Disabled'}
+                                    </button>
+                                    <button
+                                      onClick={() => {
+                                        resetUserPassword(head1User.uid);
+                                        alert(`Temporary password reset for ${head1User.name} to Galgotias@2026`);
+                                      }}
+                                      className="text-slate-400 hover:text-blue-600"
+                                      title="Reset Password"
+                                    >
+                                      <Key className="w-3 h-3" />
+                                    </button>
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          ) : (
+                            <button
+                              onClick={() => {
+                                setMappingModal({ clubId: club.id, seatKey: 'head1', headName: '' });
+                                setMappedName('');
+                                setMappedEmail('');
+                                setMappedPhone('');
+                                setMappedRole('CLUB_HEAD');
+                              }}
+                              className="px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100 font-bold text-[11px] inline-flex items-center gap-1 border border-blue-200/60"
+                            >
+                              <Plus className="w-3 h-3" />
+                              Assign Head 1
+                            </button>
+                          )}
                         </td>
 
                         {/* Head 2 */}
                         <td className="p-3.5">
-                          <div className="space-y-1">
-                            <div className="font-semibold text-slate-800">{club.head2}</div>
-                            {head2User?.institutionalEmail ? (
-                              <div className="flex items-center gap-2">
-                                <span className="text-[11px] text-emerald-700 font-medium">
-                                  {head2User.institutionalEmail}
-                                </span>
-                                <button
-                                  onClick={() => toggleUserActive(head2User.uid)}
-                                  className={`px-1.5 py-0.2 rounded text-[10px] font-bold ${
-                                    head2User.active ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'
-                                  }`}
-                                  title="Toggle active status"
-                                >
-                                  {head2User.active ? 'Active' : 'Disabled'}
-                                </button>
-                                <button
-                                  onClick={() => {
-                                    resetUserPassword(head2User.uid);
-                                    alert(`Temporary password reset for ${head2User.name} to Galgotias@2026`);
-                                  }}
-                                  className="text-slate-400 hover:text-blue-600"
-                                  title="Reset Password"
-                                >
-                                  <Key className="w-3 h-3" />
-                                </button>
-                              </div>
-                            ) : (
-                              <button
-                                onClick={() => {
-                                  setMappingModal({ clubId: club.id, headName: club.head2, currentEmail: '' });
-                                  setMappedEmail('');
-                                }}
-                                className="px-2 py-1 rounded bg-blue-50 text-blue-600 hover:bg-blue-100 font-bold text-[11px] inline-flex items-center gap-1"
-                              >
-                                <Plus className="w-3 h-3" />
-                                Map Institutional Email
-                              </button>
-                            )}
-                          </div>
+                          {club.head2 ? (
+                            <div className="space-y-1">
+                              <div className="font-semibold text-slate-800">{club.head2}</div>
+                              {head2User && (
+                                <div className="space-y-0.5 text-[11px]">
+                                  <div className="text-emerald-700 font-medium">{head2User.institutionalEmail}</div>
+                                  {head2User.phone && <div className="text-slate-600">📞 {head2User.phone}</div>}
+                                  <div className="flex items-center gap-2 mt-1">
+                                    <button
+                                      onClick={() => toggleUserActive(head2User.uid)}
+                                      className={`px-1.5 py-0.2 rounded text-[10px] font-bold ${
+                                        head2User.active ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'
+                                      }`}
+                                      title="Toggle active status"
+                                    >
+                                      {head2User.active ? 'Active' : 'Disabled'}
+                                    </button>
+                                    <button
+                                      onClick={() => {
+                                        resetUserPassword(head2User.uid);
+                                        alert(`Temporary password reset for ${head2User.name} to Galgotias@2026`);
+                                      }}
+                                      className="text-slate-400 hover:text-blue-600"
+                                      title="Reset Password"
+                                    >
+                                      <Key className="w-3 h-3" />
+                                    </button>
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          ) : (
+                            <button
+                              onClick={() => {
+                                setMappingModal({ clubId: club.id, seatKey: 'head2', headName: '' });
+                                setMappedName('');
+                                setMappedEmail('');
+                                setMappedPhone('');
+                                setMappedRole('CLUB_HEAD');
+                              }}
+                              className="px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100 font-bold text-[11px] inline-flex items-center gap-1 border border-blue-200/60"
+                            >
+                              <Plus className="w-3 h-3" />
+                              Assign Head 2
+                            </button>
+                          )}
                         </td>
 
                         <td className="p-3.5 text-slate-400 font-medium">{club.academicYear}</td>
@@ -749,20 +824,36 @@ export default function AdminDashboard({ initialSubTab = 'requests' }) {
       )}
 
       {/* ======================================================== */}
-      {/* INSTITUTIONAL EMAIL MAPPING MODAL */}
+      {/* INSTITUTIONAL ACCOUNT PROVISIONING MODAL */}
       {/* ======================================================== */}
       {mappingModal && (
         <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-100">
+          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-100 animate-in fade-in zoom-in-95 duration-150">
             <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
               <ShieldCheck className="w-5 h-5 text-blue-600" />
               Provision Institutional Account
             </h3>
             <p className="text-xs text-slate-500 mt-1">
-              Authorizing: <strong>{mappingModal.headName}</strong>
+              {mappingModal.clubId 
+                ? `Assigning Seat for: ${clubs.find(c => c.id === mappingModal.clubId)?.name || 'Club'} (${mappingModal.seatKey})`
+                : 'Creating Institutional Administrator / Approver Account'}
             </p>
 
-            <form onSubmit={handleSaveEmailMapping} className="mt-4 space-y-4">
+            <form onSubmit={handleSaveEmailMapping} className="mt-4 space-y-3.5">
+              <div>
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                  Full Name *
+                </label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. Student Head or Officer Name"
+                  value={mappedName}
+                  onChange={(e) => setMappedName(e.target.value)}
+                  className="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium"
+                />
+              </div>
+
               <div>
                 <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
                   Institutional Email Address (@galgotias.edu) *
@@ -770,11 +861,43 @@ export default function AdminDashboard({ initialSubTab = 'requests' }) {
                 <input
                   type="email"
                   required
-                  placeholder={`${mappingModal.headName.toLowerCase().replace(/\s+/g, '.')}@galgotias.edu`}
+                  placeholder="name@galgotias.edu"
                   value={mappedEmail}
                   onChange={(e) => setMappedEmail(e.target.value)}
                   className="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium"
                 />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                  Contact Phone Number *
+                </label>
+                <input
+                  type="tel"
+                  required
+                  placeholder="+91 9876543210 (Used for Authentication)"
+                  value={mappedPhone}
+                  onChange={(e) => setMappedPhone(e.target.value)}
+                  className="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium"
+                />
+                <span className="text-[10px] text-slate-400 block mt-0.5">
+                  User can sign in with this mobile number or their institutional email.
+                </span>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                  Account Role
+                </label>
+                <select
+                  value={mappedRole}
+                  onChange={(e) => setMappedRole(e.target.value)}
+                  className="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium"
+                >
+                  <option value="CLUB_HEAD">Club Head (Submit Requests)</option>
+                  <option value="ADMIN">Administrative Head (Full Control)</option>
+                  <option value="CEO">CEO / Higher Approver</option>
+                </select>
               </div>
 
               <div>
@@ -788,12 +911,12 @@ export default function AdminDashboard({ initialSubTab = 'requests' }) {
                   onChange={(e) => setTempPassword(e.target.value)}
                   className="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium"
                 />
-                <span className="text-[10px] text-slate-400 block mt-1">
-                  User will be prompted to change password on first login.
+                <span className="text-[10px] text-slate-400 block mt-0.5">
+                  Prompted to change on first login.
                 </span>
               </div>
 
-              <div className="flex justify-end gap-2 pt-2 border-t border-slate-100">
+              <div className="flex justify-end gap-2 pt-3 border-t border-slate-100">
                 <button
                   type="button"
                   onClick={() => setMappingModal(null)}
@@ -805,7 +928,7 @@ export default function AdminDashboard({ initialSubTab = 'requests' }) {
                   type="submit"
                   className="px-4 py-2 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-md"
                 >
-                  Save & Activate User
+                  Save & Provision Account
                 </button>
               </div>
             </form>
