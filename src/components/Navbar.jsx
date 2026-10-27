@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useData } from '../context/DataContext';
+import SyncIndicator from './SyncIndicator';
 import { 
   Calendar, 
   FileText, 
@@ -164,7 +165,10 @@ export default function Navbar({ activeTab, setActiveTab, onOpenLogin }) {
           </nav>
 
           {/* User Profile & Auth Controls */}
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2 sm:gap-2.5">
+            {/* Live Sync Status Pill */}
+            <SyncIndicator compact={true} />
+
             {currentUser ? (
               <>
                 <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-800 border border-slate-700/80 text-xs shadow-xs">
