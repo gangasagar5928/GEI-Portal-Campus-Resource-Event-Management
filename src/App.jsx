@@ -10,7 +10,6 @@ import LoginModal from './components/LoginModal';
 import { 
   Building2, 
   ShieldCheck, 
-  RotateCcw, 
   Heart, 
   Lock, 
   CheckCircle2,
@@ -19,7 +18,7 @@ import {
 
 function AppContent() {
   const { currentUser, updatePassword, isAdmin, isCeo, isClubHead } = useAuth();
-  const { resetToDefaults, academicYear } = useData();
+  const { academicYear } = useData();
 
   // Active navigation tab
   const [activeTab, setActiveTab] = useState(() => {
@@ -192,22 +191,10 @@ function AppContent() {
             </div>
           </div>
 
-          <div className="flex items-center gap-4 text-[11px]">
-            <span className="text-slate-400">Spark Free-Tier Compliant</span>
+          <div className="flex items-center gap-2 text-[11px] text-slate-400">
+            <span>Powered by Cloud Firestore & Firebase Auth</span>
             <span>•</span>
-            <button
-              onClick={() => {
-                if (confirm('Reset system data to initial PRD seed roster (21 clubs, 42 heads)?')) {
-                  resetToDefaults();
-                  window.location.reload();
-                }
-              }}
-              className="text-slate-400 hover:text-rose-600 flex items-center gap-1 transition-colors"
-              title="Reset test data"
-            >
-              <RotateCcw className="w-3 h-3" />
-              Reset Demo Data
-            </button>
+            <span className="text-emerald-600 font-semibold">Production Ready</span>
           </div>
         </div>
       </footer>
