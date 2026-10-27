@@ -7,6 +7,8 @@ import ClubHeadDashboard from './components/ClubHeadDashboard';
 import AdminDashboard from './components/AdminDashboard';
 import CeoDashboard from './components/CeoDashboard';
 import LoginModal from './components/LoginModal';
+import PwaInstallBanner from './components/PwaInstallBanner';
+import MobileBottomNav from './components/MobileBottomNav';
 import { 
   Building2, 
   ShieldCheck, 
@@ -65,6 +67,9 @@ function AppContent() {
   return (
     <div className="min-h-screen flex flex-col bg-slate-50 font-['Plus_Jakarta_Sans',sans-serif]">
       
+      {/* PWA Mobile App Install Prompt Banner */}
+      <PwaInstallBanner />
+
       {/* Institutional Top Navbar */}
       <Navbar
         activeTab={activeTab}
@@ -73,7 +78,7 @@ function AppContent() {
       />
 
       {/* Main Content Viewport */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 pb-24 md:pb-8">
         
         {/* VIEW 1: Auditorium Public Schedule */}
         {activeTab === 'schedule' && (
@@ -176,8 +181,15 @@ function AppContent() {
         onClose={() => setIsLoginOpen(false)}
       />
 
+      {/* Mobile Fixed Bottom Navigation Bar (PWA Ergonomics) */}
+      <MobileBottomNav
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        onOpenLogin={() => setIsLoginOpen(true)}
+      />
+
       {/* Institutional Footer */}
-      <footer className="bg-white border-t border-slate-200 mt-12 py-6 text-xs text-slate-500">
+      <footer className="bg-white border-t border-slate-200 mt-12 py-6 pb-24 md:pb-6 text-xs text-slate-500">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <img src="./logo.png" alt="GEI Logo" className="w-9 h-9 object-cover rounded-xl border border-slate-200 shadow-xs shrink-0" />
