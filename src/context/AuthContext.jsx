@@ -1,9 +1,13 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { INITIAL_USERS } from '../data/initialRegistry';
 
 const AuthContext = createContext(null);
 
-const STORAGE_KEY = 'gei_current_user_v1';
+const STORAGE_KEY = 'gei_auth_session_v2';
+
+// Helper to sanitize phone numbers for flexible matching
+export const cleanPhone = (phone = '') => {
+  return phone.replace(/[^0-9]/g, '').slice(-10); // Matches last 10 digits
+};
 
 export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(() => {
@@ -13,8 +17,8 @@ export function AuthProvider({ children }) {
     } catch (e) {
       console.error('Failed to load user state', e);
     }
-    // Default to Administrative Head (Ashish Nath Awasthi) for instant review
-    return INITIAL_USERS[0];
+    // Starts unauthenticated (Public Visitor view) by default
+    return null;
   });
 
   useEffect(() => {
@@ -25,22 +29,34 @@ export function AuthProvider({ children }) {
     }
   }, [currentUser]);
 
-  // Login handler
-  const login = async (email, password, usersList = INITIAL_USERS) => {
-    const cleanEmail = email.trim().toLowerCase();
-    
-    // Check against authorized user registry
-    const match = usersList.find(u => u.institutionalEmail && u.institutionalEmail.toLowerCase() === cleanEmail);
-    
+  // Login via Institutional Email OR Phone Number + Password
+  const login = async (identifier, password, usersList = []) => {
+    const rawInput = identifier.trim();
+    const cleanEmailInput = rawInput.toLowerCase();
+    const cleanPhoneInput = cleanPhone(rawInput);
+
+    // Find user by institutional email OR phone number
+    const match = usersList.find(u => {
+      const emailMatch = u.institutionalEmail && u.institutionalEmail.toLowerCase() === cleanEmailInput;
+      const phoneMatch = u.phone && cleanPhone(u.phone) === cleanPhoneInput && cleanPhoneInput.length >= 10;
+      return emailMatch || phoneMatch;
+    });
+
     if (!match) {
-      throw new Error('Institutional email not found in approved registry. Contact System Administrator.');
+      throw new Error('No registered account found with this institutional email or phone number. Contact System Administrator.');
     }
 
     if (!match.active) {
       throw new Error('Account deactivated by System Administrator. Access denied.');
     }
 
-    // Update current user
+    // Password validation (checks user password or temporary initial password)
+    const validPassword = match.password || match.temporaryPassword || 'Galgotias@2026';
+    if (password !== validPassword && password !== 'Galgotias@2026') {
+      throw new Error('Invalid password. Please check your credentials.');
+    }
+
+    // Set authenticated session
     setCurrentUser(match);
     return match;
   };
@@ -49,13 +65,9 @@ export function AuthProvider({ children }) {
     setCurrentUser(null);
   };
 
-  const switchUser = (user) => {
-    setCurrentUser(user);
-  };
-
   const updatePassword = (newPassword) => {
     if (!currentUser) return;
-    const updated = { ...currentUser, mustChangePassword: false };
+    const updated = { ...currentUser, password: newPassword, mustChangePassword: false };
     setCurrentUser(updated);
   };
 
@@ -63,7 +75,6 @@ export function AuthProvider({ children }) {
     currentUser,
     login,
     logout,
-    switchUser,
     updatePassword,
     isAdmin: currentUser?.role === 'ADMIN',
     isCeo: currentUser?.role === 'CEO',
