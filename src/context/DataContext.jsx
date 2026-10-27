@@ -8,10 +8,18 @@ import {
   REQUEST_CATEGORIES,
   VENUES 
 } from '../data/initialRegistry';
+import { db } from '../firebase';
+import { 
+  collection, 
+  doc, 
+  setDoc, 
+  updateDoc, 
+  onSnapshot 
+} from 'firebase/firestore';
 
 const DataContext = createContext(null);
 
-const STORAGE_KEY_PREFIX = 'gei_mgmt_';
+const STORAGE_KEY_PREFIX = 'gei_prod_v2_';
 
 function loadStored(key, fallback) {
   try {
@@ -39,7 +47,7 @@ export function DataProvider({ children }) {
   const [requests, setRequests] = useState(() => loadStored('requests', INITIAL_REQUESTS));
   const [academicYear, setAcademicYear] = useState(() => loadStored('academic_year', '2026-27'));
 
-  // Sync to localStorage
+  // Sync to local storage
   useEffect(() => { saveStored('clubs', clubs); }, [clubs]);
   useEffect(() => { saveStored('users', users); }, [users]);
   useEffect(() => { saveStored('equipment', equipment); }, [equipment]);
@@ -47,14 +55,50 @@ export function DataProvider({ children }) {
   useEffect(() => { saveStored('requests', requests); }, [requests]);
   useEffect(() => { saveStored('academic_year', academicYear); }, [academicYear]);
 
-  // High-precision interval overlap check for concurrent auditorium requests
+  // Cloud Firestore Real-time Listeners (if cloud connected)
+  useEffect(() => {
+    if (!db) return;
+
+    const unsubs = [];
+    try {
+      unsubs.push(
+        onSnapshot(collection(db, 'requests'), (snapshot) => {
+          if (!snapshot.empty) {
+            const list = snapshot.docs.map(d => ({ ...d.data(), requestId: d.id }));
+            setRequests(list);
+          }
+        }, err => console.log('Firestore requests listener:', err.message))
+      );
+
+      unsubs.push(
+        onSnapshot(collection(db, 'schedule'), (snapshot) => {
+          if (!snapshot.empty) {
+            const list = snapshot.docs.map(d => ({ ...d.data(), eventId: d.id }));
+            setSchedule(list);
+          }
+        }, err => console.log('Firestore schedule listener:', err.message))
+      );
+
+      unsubs.push(
+        onSnapshot(collection(db, 'users'), (snapshot) => {
+          if (!snapshot.empty) {
+            const list = snapshot.docs.map(d => ({ ...d.data(), uid: d.id }));
+            setUsers(list);
+          }
+        }, err => console.log('Firestore users listener:', err.message))
+      );
+    } catch (e) {
+      console.warn('Real-time listener setup error:', e);
+    }
+
+    return () => unsubs.forEach(unsub => unsub && unsub());
+  }, []);
+
+  // Conflict detection for auditorium bookings
   const checkAuditoriumConflict = (venue, date, startTime, endTime, excludeRequestId = null) => {
-    // Check against official confirmed schedule
     const scheduleConflict = schedule.find(item => {
       if (excludeRequestId && item.requestId === excludeRequestId) return false;
       if (item.venue !== venue || item.date !== date) return false;
-
-      // Time overlap condition: (StartA < EndB) and (EndA > StartB)
       return (startTime < item.endTime && endTime > item.startTime);
     });
 
@@ -67,12 +111,10 @@ export function DataProvider({ children }) {
       };
     }
 
-    // Also check other approved or under-review bookings
     const requestConflict = requests.find(req => {
       if (excludeRequestId && req.requestId === excludeRequestId) return false;
       if (req.status === 'Rejected' || req.status === 'Cancelled') return false;
       if (req.venue !== venue || req.requestedDate !== date) return false;
-
       return (startTime < req.endTime && endTime > req.startTime);
     });
 
@@ -89,8 +131,7 @@ export function DataProvider({ children }) {
   };
 
   // Submit new request
-  const submitRequest = (requestData, currentUser) => {
-    // Determine if higher approval is required
+  const submitRequest = async (requestData, currentUser) => {
     const categoryConfig = REQUEST_CATEGORIES.find(c => c.id === requestData.category);
     const venueConfig = VENUES.find(v => v.name === requestData.venue);
     const requiresHigher = Boolean(categoryConfig?.requiresHigherApproval || venueConfig?.requiresHigherApproval);
@@ -104,6 +145,7 @@ export function DataProvider({ children }) {
       clubName: currentUser.clubName || 'General',
       submittedByUid: currentUser.uid,
       submittedByName: currentUser.name,
+      submittedByPhone: currentUser.phone || '',
       category: requestData.category,
       title: requestData.title,
       description: requestData.description,
@@ -132,30 +174,38 @@ export function DataProvider({ children }) {
     };
 
     setRequests(prev => [newRequest, ...prev]);
+
+    if (db) {
+      try {
+        await setDoc(doc(db, 'requests', newRequestId), newRequest);
+      } catch (err) {
+        console.warn('Firestore write error:', err.message);
+      }
+    }
+
     return newRequest;
   };
 
-  // Admin / CEO Actions
-  const approveRequest = (requestId, actor, comment = '') => {
+  // Approvals & Workflow
+  const approveRequest = async (requestId, actor, comment = '') => {
     const timestamp = new Date().toISOString();
     let updatedReq = null;
 
     setRequests(prev => prev.map(req => {
       if (req.requestId !== requestId) return req;
 
-      // Deduct equipment inventory if applicable
-      if (req.equipmentRequirements && req.equipmentRequirements.length > 0) {
+      // Deduct equipment
+      if (req.equipmentRequirements?.length > 0) {
         setEquipment(prevEq => prevEq.map(eq => {
           const reqItem = req.equipmentRequirements.find(r => r.name === eq.name);
           if (reqItem) {
-            const newAvail = Math.max(0, eq.quantityAvailable - reqItem.qty);
-            return { ...eq, quantityAvailable: newAvail };
+            return { ...eq, quantityAvailable: Math.max(0, eq.quantityAvailable - reqItem.qty) };
           }
           return eq;
         }));
       }
 
-      // Add to confirmed schedule if venue is specified
+      // Add to official schedule
       if (req.venue && req.venue !== 'None / Equipment Only') {
         const newScheduleEvent = {
           eventId: `sch-${Date.now()}`,
@@ -173,6 +223,10 @@ export function DataProvider({ children }) {
           updatedAt: timestamp
         };
         setSchedule(prevSch => [newScheduleEvent, ...prevSch]);
+
+        if (db) {
+          setDoc(doc(db, 'schedule', newScheduleEvent.eventId), newScheduleEvent).catch(console.warn);
+        }
       }
 
       updatedReq = {
@@ -195,14 +249,18 @@ export function DataProvider({ children }) {
       return updatedReq;
     }));
 
+    if (db && updatedReq) {
+      updateDoc(doc(db, 'requests', requestId), updatedReq).catch(console.warn);
+    }
+
     return updatedReq;
   };
 
-  const rejectRequest = (requestId, actor, comment = '') => {
+  const rejectRequest = async (requestId, actor, comment = '') => {
     const timestamp = new Date().toISOString();
     setRequests(prev => prev.map(req => {
       if (req.requestId !== requestId) return req;
-      return {
+      const updated = {
         ...req,
         status: 'Rejected',
         currentApproverRole: 'COMPLETED',
@@ -219,14 +277,16 @@ export function DataProvider({ children }) {
           }
         ]
       };
+      if (db) updateDoc(doc(db, 'requests', requestId), updated).catch(console.warn);
+      return updated;
     }));
   };
 
-  const requestClarification = (requestId, actor, comment) => {
+  const requestClarification = async (requestId, actor, comment) => {
     const timestamp = new Date().toISOString();
     setRequests(prev => prev.map(req => {
       if (req.requestId !== requestId) return req;
-      return {
+      const updated = {
         ...req,
         status: 'Need Clarification',
         currentApproverRole: 'CLUB_HEAD',
@@ -244,14 +304,16 @@ export function DataProvider({ children }) {
           }
         ]
       };
+      if (db) updateDoc(doc(db, 'requests', requestId), updated).catch(console.warn);
+      return updated;
     }));
   };
 
-  const submitClarificationResponse = (requestId, actor, responseText, updatedNotes) => {
+  const submitClarificationResponse = async (requestId, actor, responseText, updatedNotes) => {
     const timestamp = new Date().toISOString();
     setRequests(prev => prev.map(req => {
       if (req.requestId !== requestId) return req;
-      return {
+      const updated = {
         ...req,
         status: 'Under Review',
         currentApproverRole: 'ADMIN',
@@ -270,14 +332,16 @@ export function DataProvider({ children }) {
           }
         ]
       };
+      if (db) updateDoc(doc(db, 'requests', requestId), updated).catch(console.warn);
+      return updated;
     }));
   };
 
-  const forwardForApproval = (requestId, actor, comment = '') => {
+  const forwardForApproval = async (requestId, actor, comment = '') => {
     const timestamp = new Date().toISOString();
     setRequests(prev => prev.map(req => {
       if (req.requestId !== requestId) return req;
-      return {
+      const updated = {
         ...req,
         status: 'Forwarded for Approval',
         currentApproverRole: 'CEO',
@@ -289,16 +353,18 @@ export function DataProvider({ children }) {
             action: 'FORWARDED_FOR_APPROVAL',
             actorName: actor.name,
             actorRole: actor.role,
-            comment: comment || 'Forwarded to CEO for higher review.',
+            comment: comment || 'Forwarded for executive review.',
             timestamp
           }
         ]
       };
+      if (db) updateDoc(doc(db, 'requests', requestId), updated).catch(console.warn);
+      return updated;
     }));
   };
 
-  // Official Schedule Management
-  const addScheduleEvent = (eventData, actor) => {
+  // Schedule Management
+  const addScheduleEvent = async (eventData, actor) => {
     const timestamp = new Date().toISOString();
     const newEvent = {
       eventId: `sch-manual-${Date.now()}`,
@@ -316,6 +382,7 @@ export function DataProvider({ children }) {
       updatedAt: timestamp
     };
     setSchedule(prev => [newEvent, ...prev]);
+    if (db) setDoc(doc(db, 'schedule', newEvent.eventId), newEvent).catch(console.warn);
     return newEvent;
   };
 
@@ -323,41 +390,95 @@ export function DataProvider({ children }) {
     setSchedule(prev => prev.filter(e => e.eventId !== eventId));
   };
 
-  // Club & User Management
-  const mapClubHeadEmail = (clubId, headName, email, temporaryPassword = 'Galgotias@2026') => {
-    const cleanEmail = email.trim().toLowerCase();
-    const uid = `user_${headName.toLowerCase().replace(/[^a-z0-9]/g, '_')}`;
+  // Master Admin Registration (Initial System Bootstrap)
+  const registerMasterAdmin = async ({ name, institutionalEmail, phone, password, role = 'ADMIN' }) => {
+    const cleanEmail = institutionalEmail.trim().toLowerCase();
+    const cleanPhone = phone ? phone.trim() : '';
+    const uid = `admin_${Date.now()}`;
 
-    // Update or add user in users list
+    const adminUser = {
+      uid,
+      name: name.trim(),
+      institutionalEmail: cleanEmail,
+      phone: cleanPhone,
+      password: password.trim(),
+      role: role.toUpperCase(),
+      active: true,
+      mustChangePassword: false,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+
+    setUsers(prev => [adminUser, ...prev]);
+
+    if (db) {
+      try {
+        await setDoc(doc(db, 'users', uid), adminUser);
+      } catch (err) {
+        console.warn('Firestore write error:', err.message);
+      }
+    }
+
+    return adminUser;
+  };
+
+  // Provision / Map User Account (Supports Name, Email, Phone, Role)
+  const mapUserAccount = async ({ clubId, seatKey, name, institutionalEmail, phone, password, role = 'CLUB_HEAD' }) => {
+    const cleanEmail = institutionalEmail.trim().toLowerCase();
+    const cleanPhone = phone ? phone.trim() : '';
+    const uid = `user_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`;
+    const club = clubs.find(c => c.id === clubId);
+
+    const userObj = {
+      uid,
+      name: name.trim(),
+      institutionalEmail: cleanEmail,
+      phone: cleanPhone,
+      password: password.trim(),
+      temporaryPassword: password.trim(),
+      role,
+      clubId: clubId || '',
+      clubName: club?.name || '',
+      active: true,
+      mustChangePassword: true,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+
+    // Update user list
     setUsers(prev => {
-      const existingIdx = prev.findIndex(u => u.name === headName);
-      const userObj = {
-        uid: existingIdx >= 0 ? prev[existingIdx].uid : uid,
-        name: headName,
-        institutionalEmail: cleanEmail,
-        role: 'CLUB_HEAD',
-        clubId,
-        clubName: clubs.find(c => c.id === clubId)?.name || 'Club',
-        active: true,
-        mustChangePassword: true,
-        temporaryPassword,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      };
-
-      if (existingIdx >= 0) {
+      const idx = prev.findIndex(u => u.institutionalEmail === cleanEmail || (cleanPhone && u.phone === cleanPhone));
+      if (idx >= 0) {
         const copy = [...prev];
-        copy[existingIdx] = { ...copy[existingIdx], ...userObj };
+        copy[idx] = { ...copy[idx], ...userObj };
         return copy;
       }
-      return [...prev, userObj];
+      return [userObj, ...prev];
     });
+
+    // Update club head seat if specified
+    if (clubId && seatKey) {
+      setClubs(prev => prev.map(c => {
+        if (c.id === clubId) {
+          return { ...c, [seatKey]: name.trim() };
+        }
+        return c;
+      }));
+    }
+
+    if (db) {
+      setDoc(doc(db, 'users', uid), userObj).catch(console.warn);
+    }
+
+    return userObj;
   };
 
   const toggleUserActive = (uid) => {
     setUsers(prev => prev.map(u => {
       if (u.uid === uid) {
-        return { ...u, active: !u.active, updatedAt: new Date().toISOString() };
+        const updated = { ...u, active: !u.active, updatedAt: new Date().toISOString() };
+        if (db) updateDoc(doc(db, 'users', uid), { active: updated.active }).catch(console.warn);
+        return updated;
       }
       return u;
     }));
@@ -366,12 +487,15 @@ export function DataProvider({ children }) {
   const resetUserPassword = (uid, tempPassword = 'Galgotias@2026') => {
     setUsers(prev => prev.map(u => {
       if (u.uid === uid) {
-        return { 
+        const updated = { 
           ...u, 
           mustChangePassword: true, 
           temporaryPassword: tempPassword,
+          password: tempPassword,
           updatedAt: new Date().toISOString() 
         };
+        if (db) updateDoc(doc(db, 'users', uid), { mustChangePassword: true, password: tempPassword }).catch(console.warn);
+        return updated;
       }
       return u;
     }));
@@ -379,11 +503,9 @@ export function DataProvider({ children }) {
 
   const rolloverAcademicYear = (newYear) => {
     setAcademicYear(newYear);
-    // Mark clubs with new academic year
     setClubs(prev => prev.map(c => ({ ...c, academicYear: newYear })));
   };
 
-  // Equipment Management
   const updateEquipmentQuantity = (equipmentId, newTotal, newAvailable) => {
     setEquipment(prev => prev.map(eq => {
       if (eq.id === equipmentId) {
@@ -396,16 +518,6 @@ export function DataProvider({ children }) {
       }
       return eq;
     }));
-  };
-
-  const resetToDefaults = () => {
-    localStorage.clear();
-    setClubs(INITIAL_CLUBS);
-    setUsers(INITIAL_USERS);
-    setEquipment(INITIAL_EQUIPMENT);
-    setSchedule(INITIAL_SCHEDULE);
-    setRequests(INITIAL_REQUESTS);
-    setAcademicYear('2026-27');
   };
 
   const value = {
@@ -424,12 +536,12 @@ export function DataProvider({ children }) {
     forwardForApproval,
     addScheduleEvent,
     deleteScheduleEvent,
-    mapClubHeadEmail,
+    mapUserAccount,
+    registerMasterAdmin,
     toggleUserActive,
     resetUserPassword,
     rolloverAcademicYear,
-    updateEquipmentQuantity,
-    resetToDefaults
+    updateEquipmentQuantity
   };
 
   return <DataContext.Provider value={value}>{children}</DataContext.Provider>;
