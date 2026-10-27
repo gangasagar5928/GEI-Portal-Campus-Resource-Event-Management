@@ -1,0 +1,17 @@
+{
+  "short_name": "GEI Portal",
+  "name": "GEI Campus Resource & Event Management System",
+  "description": "Galgotias Educational Institutions Resource and Event Booking Management Platform",
+  "icons": [
+    {
+      "src": "./logo.png",
+      "type": "image/png",
+      "sizes": "192x192 512x512"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#0f172a",
+  "theme_color": "#1e3a8a",
+  "display": "standalone",
+  "orientation": "portrait"
+}
