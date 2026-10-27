@@ -47,7 +47,7 @@ export function DataProvider({ children }) {
   useEffect(() => { saveStored('requests', requests); }, [requests]);
   useEffect(() => { saveStored('academic_year', academicYear); }, [academicYear]);
 
-  // Conflict detection for auditorium bookings
+  // High-precision interval overlap check for concurrent auditorium requests
   const checkAuditoriumConflict = (venue, date, startTime, endTime, excludeRequestId = null) => {
     // Check against official confirmed schedule
     const scheduleConflict = schedule.find(item => {
