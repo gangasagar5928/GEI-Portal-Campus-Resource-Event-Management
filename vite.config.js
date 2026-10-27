@@ -9,6 +9,10 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
+  build: {
+    sourcemap: false,
+    chunkSizeWarningLimit: 1000,
+  },
   server: {
     port: 3000,
     open: false,
