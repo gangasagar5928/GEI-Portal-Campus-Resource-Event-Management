@@ -1,0 +1,137 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function getUserData() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() && (
+        getUserData().role == 'ADMIN' ||
+        request.auth.token.role == 'ADMIN'
+      );
+    }
+
+    function isCeo() {
+      return isAuthenticated() && (
+        getUserData().role == 'CEO' ||
+        request.auth.token.role == 'CEO'
+      );
+    }
+
+    function isApprover() {
+      return isAdmin() || isCeo();
+    }
+
+    function isClubHead() {
+      return isAuthenticated() && getUserData().role == 'CLUB_HEAD';
+    }
+
+    function belongsToClub(clubId) {
+      return isClubHead() && getUserData().clubId == clubId;
+    }
+
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Users Collection
+    match /users/{userId} {
+      // Users can read own profile; Admins can read all profiles
+      allow read: if isAuthenticated() && (request.auth.uid == userId || isAdmin());
+      
+      // Only Admins can create or update users (assign roles, map emails, activate/deactivate)
+      // Users can only update their own password change flag or name if permitted
+      allow create, delete: if isAdmin();
+      allow update: if isAdmin() || (
+        isAuthenticated() && 
+        request.auth.uid == userId && 
+        !request.resource.data.diff(resource.data).affectedKeys().hasAny(['role', 'clubId', 'active', 'institutionalEmail'])
+      );
+    }
+
+    // Clubs Collection (2026-27 Roster)
+    match /clubs/{clubId} {
+      // Anyone authenticated can read clubs registry
+      allow read: if isAuthenticated();
+      // Only Admins can modify club list or assign club heads
+      allow write: if isAdmin();
+    }
+
+    // Requests Collection
+    match /requests/{requestId} {
+      // Public cannot read requests
+      // Club heads can read their own club's requests
+      // Approvers/Admins can read all requests
+      allow read: if isAuthenticated() && (
+        isApprover() || 
+        belongsToClub(resource.data.clubId)
+      );
+
+      // Club heads can create requests for their assigned club
+      allow create: if isAuthenticated() && 
+        isClubHead() && 
+        request.resource.data.submittedByUid == request.auth.uid &&
+        belongsToClub(request.resource.data.clubId) &&
+        request.resource.data.status == 'Submitted';
+
+      // Updates:
+      // 1. Club heads can update only when status is 'Need Clarification' to supply info
+      // 2. Approvers (Admin/CEO) can update status, currentApproverRole, comments
+      allow update: if isAuthenticated() && (
+        (isApprover()) ||
+        (
+          belongsToClub(resource.data.clubId) &&
+          resource.data.status == 'Need Clarification' &&
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['description', 'clarificationResponse', 'resourceRequirements', 'updatedAt', 'status']) &&
+          request.resource.data.status == 'Under Review'
+        )
+      );
+
+      allow delete: if isAdmin();
+
+      // Approval History Subcollection (Immutable audit log)
+      match /approvalHistory/{historyId} {
+        allow read: if isAuthenticated() && (
+          isApprover() || 
+          belongsToClub(get(/databases/$(database)/documents/requests/$(requestId)).data.clubId)
+        );
+        // Only approvers can add audit log entries; logs cannot be updated or deleted
+        allow create: if isAuthenticated() && isApprover() && request.resource.data.actorUid == request.auth.uid;
+        allow update, delete: if false;
+      }
+    }
+
+    // Official Schedule Collection
+    match /schedule/{eventId} {
+      // Public visitors can read published events
+      allow read: if resource.data.visibility == 'public' || isAuthenticated();
+      
+      // Only Admin can create, update or delete schedule entries
+      allow write: if isAdmin();
+    }
+
+    // Equipment Collection
+    match /equipment/{equipmentId} {
+      // All authenticated users can read inventory availability
+      allow read: if isAuthenticated();
+      // Only Admin can update inventory quantities or status
+      allow write: if isAdmin();
+    }
+
+    // Settings Collection
+    match /settings/{settingId} {
+      // Authenticated users can read policy rules
+      allow read: if isAuthenticated();
+      // Only Admin can change settings
+      allow write: if isAdmin();
+    }
+  }
+}
