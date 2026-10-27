@@ -58,7 +58,7 @@ export default function CeoDashboard() {
             <span className="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-purple-400 text-purple-950 uppercase tracking-wider">
               Executive Higher Approver
             </span>
-            <span className="text-xs text-purple-300 font-semibold">Dhruv Galgotia, CEO</span>
+            <span className="text-xs text-purple-300 font-semibold">{currentUser?.name || 'Executive Approver'}</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-black">
             Executive Leadership Review Queue
@@ -113,7 +113,7 @@ export default function CeoDashboard() {
                         </span>
                         <span className="text-slate-300">•</span>
                         <span className="text-xs text-purple-700 font-semibold bg-purple-50 px-2 py-0.5 rounded">
-                          Forwarded by Ashish Nath Awasthi
+                          Forwarded by Administration
                         </span>
                       </div>
 
