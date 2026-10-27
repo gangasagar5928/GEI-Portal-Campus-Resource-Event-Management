@@ -35,7 +35,15 @@ export default function Navbar({ activeTab, setActiveTab, onOpenLogin }) {
           {/* Logo & Branding */}
           <div className="flex items-center gap-3 cursor-pointer" onClick={() => setActiveTab('schedule')}>
             <div className="w-10 h-10 rounded-xl bg-white p-0.5 flex items-center justify-center shadow-lg shadow-blue-500/25 border border-white/20 overflow-hidden shrink-0">
-              <img src="./logo.png" alt="GEI Portal Logo" className="w-full h-full object-cover rounded-lg" />
+              <img 
+                src="./logo-sm.webp" 
+                alt="GEI Portal Logo" 
+                width="40" 
+                height="40" 
+                className="w-full h-full object-cover rounded-lg" 
+                loading="eager" 
+                fetchpriority="high" 
+              />
             </div>
             <div>
               <div className="flex items-center gap-2">

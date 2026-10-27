@@ -1,12 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { DataProvider, useData } from './context/DataContext';
 import Navbar from './components/Navbar';
 import PublicSchedule from './components/PublicSchedule';
-import ClubHeadDashboard from './components/ClubHeadDashboard';
-import AdminDashboard from './components/AdminDashboard';
-import CeoDashboard from './components/CeoDashboard';
-import LoginModal from './components/LoginModal';
 import PwaInstallBanner from './components/PwaInstallBanner';
 import MobileBottomNav from './components/MobileBottomNav';
 import { 
@@ -15,8 +11,21 @@ import {
   Heart, 
   Lock, 
   CheckCircle2,
-  Calendar
+  Calendar,
+  Loader2
 } from 'lucide-react';
+
+// Code Splitting: Lazy load authenticated portals to minimize initial bundle size
+const ClubHeadDashboard = lazy(() => import('./components/ClubHeadDashboard'));
+const AdminDashboard = lazy(() => import('./components/AdminDashboard'));
+const CeoDashboard = lazy(() => import('./components/CeoDashboard'));
+const LoginModal = lazy(() => import('./components/LoginModal'));
+
+const LoadingFallback = () => (
+  <div className="flex items-center justify-center py-24 text-slate-400">
+    <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+  </div>
+);
 
 function AppContent() {
   const { currentUser, updatePassword, isAdmin, isCeo, isClubHead } = useAuth();
@@ -80,7 +89,7 @@ function AppContent() {
       {/* Main Content Viewport */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 pb-24 md:pb-8">
         
-        {/* VIEW 1: Auditorium Public Schedule */}
+        {/* VIEW 1: Auditorium Public Schedule (Fast Critical Path) */}
         {activeTab === 'schedule' && (
           <PublicSchedule onOpenRequest={() => {
             if (currentUser) {
@@ -91,46 +100,49 @@ function AppContent() {
           }} />
         )}
 
-        {/* VIEW 2: Club Head Dashboard - Requests */}
-        {activeTab === 'club-requests' && (
-          <ClubHeadDashboard
-            initialMode="my-requests"
-            onSwitchToSchedule={() => setActiveTab('schedule')}
-          />
-        )}
+        {/* Authenticated Lazy Views wrapped in Suspense */}
+        <Suspense fallback={<LoadingFallback />}>
+          {/* VIEW 2: Club Head Dashboard - Requests */}
+          {activeTab === 'club-requests' && (
+            <ClubHeadDashboard
+              initialMode="my-requests"
+              onSwitchToSchedule={() => setActiveTab('schedule')}
+            />
+          )}
 
-        {/* VIEW 3: Club Head Dashboard - New Request */}
-        {activeTab === 'new-request' && (
-          <ClubHeadDashboard
-            initialMode="new-request"
-            onSwitchToSchedule={() => setActiveTab('schedule')}
-          />
-        )}
+          {/* VIEW 3: Club Head Dashboard - New Request */}
+          {activeTab === 'new-request' && (
+            <ClubHeadDashboard
+              initialMode="new-request"
+              onSwitchToSchedule={() => setActiveTab('schedule')}
+            />
+          )}
 
-        {/* VIEW 4: Administrative Dashboard - Requests Queue */}
-        {activeTab === 'admin-requests' && (
-          <AdminDashboard initialSubTab="requests" />
-        )}
+          {/* VIEW 4: Administrative Dashboard - Requests Queue */}
+          {activeTab === 'admin-requests' && (
+            <AdminDashboard initialSubTab="requests" />
+          )}
 
-        {/* VIEW 5: Administrative Dashboard - Schedule Management */}
-        {activeTab === 'admin-schedule' && (
-          <AdminDashboard initialSubTab="schedule" />
-        )}
+          {/* VIEW 5: Administrative Dashboard - Schedule Management */}
+          {activeTab === 'admin-schedule' && (
+            <AdminDashboard initialSubTab="schedule" />
+          )}
 
-        {/* VIEW 6: Administrative Dashboard - Equipment Inventory */}
-        {activeTab === 'admin-equipment' && (
-          <AdminDashboard initialSubTab="equipment" />
-        )}
+          {/* VIEW 6: Administrative Dashboard - Equipment Inventory */}
+          {activeTab === 'admin-equipment' && (
+            <AdminDashboard initialSubTab="equipment" />
+          )}
 
-        {/* VIEW 7: Administrative Dashboard - 21 Clubs & Account Registry */}
-        {activeTab === 'admin-registry' && (
-          <AdminDashboard initialSubTab="registry" />
-        )}
+          {/* VIEW 7: Administrative Dashboard - 21 Clubs & Account Registry */}
+          {activeTab === 'admin-registry' && (
+            <AdminDashboard initialSubTab="registry" />
+          )}
 
-        {/* VIEW 8: CEO Higher Approver Review Queue */}
-        {activeTab === 'ceo-approvals' && (
-          <CeoDashboard />
-        )}
+          {/* VIEW 8: CEO Higher Approver Review Queue */}
+          {activeTab === 'ceo-approvals' && (
+            <CeoDashboard />
+          )}
+        </Suspense>
 
       </main>
 
@@ -175,11 +187,15 @@ function AppContent() {
         </div>
       )}
 
-      {/* Institutional Sign In Modal */}
-      <LoginModal
-        isOpen={isLoginOpen}
-        onClose={() => setIsLoginOpen(false)}
-      />
+      {/* Institutional Sign In Modal (Lazy Loaded) */}
+      {isLoginOpen && (
+        <Suspense fallback={<LoadingFallback />}>
+          <LoginModal
+            isOpen={isLoginOpen}
+            onClose={() => setIsLoginOpen(false)}
+          />
+        </Suspense>
+      )}
 
       {/* Mobile Fixed Bottom Navigation Bar (PWA Ergonomics) */}
       <MobileBottomNav
@@ -189,24 +205,31 @@ function AppContent() {
       />
 
       {/* Institutional Footer */}
-      <footer className="bg-white border-t border-slate-200 mt-12 py-6 pb-24 md:pb-6 text-xs text-slate-500">
+      <footer className="bg-slate-900 border-t border-slate-800 mt-12 py-6 pb-24 md:pb-6 text-xs text-slate-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <img src="./logo.png" alt="GEI Logo" className="w-9 h-9 object-cover rounded-xl border border-slate-200 shadow-xs shrink-0" />
+            <img 
+              src="./logo-sm.webp" 
+              alt="GEI Logo" 
+              width="36" 
+              height="36" 
+              className="w-9 h-9 object-cover rounded-xl border border-slate-700 shadow-xs shrink-0" 
+              loading="lazy" 
+            />
             <div>
-              <div className="font-bold text-slate-800">
+              <div className="font-bold text-white">
                 Galgotias Educational Institutions (GEI)
               </div>
-              <p className="text-[11px] text-slate-400 mt-0.5">
+              <p className="text-[11px] text-slate-300 mt-0.5">
                 Campus Resource & Event Management System • Academic Year {academicYear}
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-2 text-[11px] text-slate-400">
-            <span>Powered by Cloud Firestore & Firebase Auth</span>
+          <div className="flex items-center gap-2 text-[11px] text-slate-300">
+            <span>Powered by Cloud Firestore & Firebase PWA</span>
             <span>•</span>
-            <span className="text-emerald-600 font-semibold">Production Ready</span>
+            <span className="text-emerald-400 font-semibold">Production Ready</span>
           </div>
         </div>
       </footer>

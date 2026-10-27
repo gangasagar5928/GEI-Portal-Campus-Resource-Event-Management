@@ -99,7 +99,14 @@ export default function LoginModal({ isOpen, onClose }) {
         {/* Branding */}
         <div className="text-center mb-6">
           <div className="w-16 h-16 rounded-2xl bg-white p-1 flex items-center justify-center mx-auto mb-3 shadow-lg border border-slate-200/80">
-            <img src="./logo.png" alt="GEI Portal Logo" className="w-full h-full object-cover rounded-xl" />
+            <img 
+              src="./logo.webp" 
+              alt="GEI Portal Logo" 
+              width="64" 
+              height="64" 
+              className="w-full h-full object-cover rounded-xl" 
+              loading="lazy" 
+            />
           </div>
           <h2 className="text-xl font-black text-slate-900">
             {isSetupMode ? 'System Administrator Setup' : 'Institutional Sign In'}

@@ -10,8 +10,18 @@ export default defineConfig({
     tailwindcss(),
   ],
   build: {
+    target: 'es2022',
+    minify: 'esbuild',
     sourcemap: false,
-    chunkSizeWarningLimit: 1000,
+    chunkSizeWarningLimit: 600,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor-react': ['react', 'react-dom'],
+          'vendor-firestore': ['firebase/app', 'firebase/firestore']
+        }
+      }
+    }
   },
   server: {
     port: 3000,

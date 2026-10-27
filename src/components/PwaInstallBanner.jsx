@@ -72,7 +72,14 @@ export default function PwaInstallBanner() {
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-white p-0.5 shadow-md shrink-0">
-              <img src="./logo.png" alt="GEI Logo" className="w-full h-full object-cover rounded-md" />
+              <img 
+                src="./logo-sm.webp" 
+                alt="GEI Logo" 
+                width="32" 
+                height="32" 
+                className="w-full h-full object-cover rounded-md" 
+                loading="lazy" 
+              />
             </div>
             <div>
               <p className="text-xs font-bold leading-tight flex items-center gap-1.5 text-white">
