@@ -1,0 +1,27 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/v1/server-card.schema.json",
+  "name": "gei/campus-portal-mcp",
+  "version": "1.0.0",
+  "title": "GEI Campus Resource & Schedule Explorer",
+  "description": "Secure remote MCP server providing read-only event schedule verification and venue booking status for Galgotias Educational Institutions.",
+  "websiteUrl": "https://gei-campus-portal.web.app",
+  "repository": "https://github.com/gangasagar5928/GEI-Portal-Campus-Resource-Event-Management",
+  "transports": [
+    {
+      "type": "streamable-http",
+      "url": "https://gei-campus-portal.web.app/mcp",
+      "supportedProtocolVersions": [
+        "2025-11-25"
+      ]
+    }
+  ],
+  "capabilities": {
+    "resources": {
+      "subscribe": true,
+      "listChanged": true
+    },
+    "tools": {
+      "listChanged": true
+    }
+  }
+}
