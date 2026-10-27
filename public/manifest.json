@@ -4,8 +4,8 @@
   "description": "Galgotias Educational Institutions Resource and Event Booking Management Platform",
   "icons": [
     {
-      "src": "/vite.svg",
-      "type": "image/svg+xml",
+      "src": "./logo.png",
+      "type": "image/png",
       "sizes": "192x192 512x512"
     }
   ],

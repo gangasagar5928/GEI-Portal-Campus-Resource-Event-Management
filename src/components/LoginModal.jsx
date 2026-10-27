@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useData } from '../context/DataContext';
 import { 
-  Building2, 
   Lock, 
   Mail, 
   AlertCircle, 
@@ -69,8 +68,8 @@ export default function LoginModal({ isOpen, onClose }) {
 
         {/* Branding */}
         <div className="text-center mb-6">
-          <div className="w-12 h-12 rounded-xl bg-blue-600 text-white flex items-center justify-center mx-auto mb-3 shadow-lg shadow-blue-600/30">
-            <Building2 className="w-6 h-6" />
+          <div className="w-16 h-16 rounded-2xl bg-white p-1 flex items-center justify-center mx-auto mb-3 shadow-lg border border-slate-200/80">
+            <img src="./logo.png" alt="GEI Portal Logo" className="w-full h-full object-cover rounded-xl" />
           </div>
           <h2 className="text-xl font-black text-slate-900">
             Institutional Sign In

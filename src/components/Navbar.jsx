@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useData } from '../context/DataContext';
 import { 
-  Building2, 
   Calendar, 
   FileText, 
   Users, 
@@ -36,8 +35,8 @@ export default function Navbar({ activeTab, setActiveTab, onOpenLogin }) {
           
           {/* Logo & Branding */}
           <div className="flex items-center gap-3 cursor-pointer" onClick={() => setActiveTab('schedule')}>
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center shadow-lg shadow-blue-500/25 border border-blue-400/30">
-              <Building2 className="w-5 h-5 text-white" />
+            <div className="w-10 h-10 rounded-xl bg-white p-0.5 flex items-center justify-center shadow-lg shadow-blue-500/25 border border-white/20 overflow-hidden shrink-0">
+              <img src="./logo.png" alt="GEI Portal Logo" className="w-full h-full object-cover rounded-lg" />
             </div>
             <div>
               <div className="flex items-center gap-2">

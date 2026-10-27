@@ -180,13 +180,16 @@ function AppContent() {
       {/* Institutional Footer */}
       <footer className="bg-white border-t border-slate-200 mt-12 py-6 text-xs text-slate-500">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div>
-            <div className="font-bold text-slate-800">
-              Galgotias Educational Institutions (GEI)
+          <div className="flex items-center gap-3">
+            <img src="./logo.png" alt="GEI Logo" className="w-9 h-9 object-cover rounded-xl border border-slate-200 shadow-xs shrink-0" />
+            <div>
+              <div className="font-bold text-slate-800">
+                Galgotias Educational Institutions (GEI)
+              </div>
+              <p className="text-[11px] text-slate-400 mt-0.5">
+                Campus Resource & Event Management System • Academic Year {academicYear}
+              </p>
             </div>
-            <p className="text-[11px] text-slate-400 mt-0.5">
-              Campus Resource & Event Management System • Academic Year {academicYear}
-            </p>
           </div>
 
           <div className="flex items-center gap-4 text-[11px]">
