@@ -1,5 +1,7 @@
 # GEI Campus Resource & Event Management System (v1.0)
 
+[![CI/CD Pipeline](https://github.com/gangasagar5928/GEI-Portal-Campus-Resource-Event-Management/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/gangasagar5928/GEI-Portal-Campus-Resource-Event-Management/actions/workflows/ci-cd.yml)
+
 **Institution:** Galgotias Educational Institutions (GEI)  
 **Target:** Student Council GCET Campus Management Platform  
 **Architecture:** Cloud-ready SPA & PWA with Spark free-tier compliance
