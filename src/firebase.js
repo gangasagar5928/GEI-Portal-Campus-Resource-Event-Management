@@ -1,5 +1,4 @@
 import { initializeApp, getApps, getApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
 import { 
   getFirestore, 
   initializeFirestore, 
@@ -17,12 +16,10 @@ const firebaseConfig = {
 };
 
 let app = null;
-let auth = null;
 let db = null;
 
 try {
   app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
-  auth = getAuth(app);
   
   // Enable persistent offline cache with multi-tab synchronization for mobile PWA
   try {
@@ -41,4 +38,4 @@ try {
 }
 
 export const isFirebaseConfigured = Boolean(db);
-export { app, auth, db };
+export { app, db };
