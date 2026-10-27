@@ -1,17 +1,23 @@
 // GEI Campus Resource & Event Management System - Service Worker
 // Cache Version
-const CACHE_NAME = 'gei-portal-pwa-v1';
+const CACHE_NAME = 'gei-portal-pwa-v2';
 
 // Core shell assets to precache for offline support
 const PRECACHE_ASSETS = [
   './',
   './index.html',
   './manifest.json',
+  './logo-sm.webp',
+  './logo.webp',
   './logo.png',
   './favicon.png',
   './icon-192.png',
   './icon-512.png',
-  './icon-maskable.png'
+  './icon-maskable.png',
+  './robots.txt',
+  './sitemap.xml',
+  './llms.txt',
+  './ai-catalog.json'
 ];
 
 // Install Event: Precache app shell
