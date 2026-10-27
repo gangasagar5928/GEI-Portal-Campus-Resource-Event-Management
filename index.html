@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="./logo.png" />
     <link rel="apple-touch-icon" href="./icon-192.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>GEI Campus Resource & Event Management</title>
     <meta name="description" content="Galgotias Educational Institutions Resource and Event Booking Management Platform" />
     
@@ -18,11 +18,22 @@
     <meta name="format-detection" content="telephone=no" />
     <link rel="manifest" href="./manifest.json" />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <script type="module" crossorigin src="./assets/index-r8jZTX8W.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-C4sOeNKb.css">
+    <!-- Performance Preconnect & Preloads -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://firestore.googleapis.com" crossorigin />
+    <link rel="preload" as="image" href="./logo-sm.webp" type="image/webp" fetchpriority="high" />
+
+    <!-- Asynchronous Non-blocking Web Fonts -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" media="print" onload="this.media='all'" />
+    <noscript>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" />
+    </noscript>
+    <script type="module" crossorigin src="./assets/index-ZF0iR6TT.js"></script>
+    <link rel="modulepreload" crossorigin href="./assets/vendor-react-DHz4kLit.js">
+    <link rel="modulepreload" crossorigin href="./assets/vendor-firestore-Za6zlxAW.js">
+    <link rel="stylesheet" crossorigin href="./assets/index-Dr6bzyaN.css">
   </head>
   <body class="bg-slate-50 text-slate-900 antialiased font-['Plus_Jakarta_Sans',sans-serif]">
     <div id="root"></div>
