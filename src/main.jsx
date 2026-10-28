@@ -8,11 +8,20 @@ if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./sw.js')
       .then((registration) => {
-        console.log('[GEI PWA] Service Worker registered with scope:', registration.scope);
+        registration.update();
       })
       .catch((error) => {
         console.warn('[GEI PWA] Service Worker registration failed:', error);
       });
+  });
+
+  // Reload when updated service worker activates
+  let refreshing = false;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (!refreshing) {
+      refreshing = true;
+      window.location.reload();
+    }
   });
 }
 

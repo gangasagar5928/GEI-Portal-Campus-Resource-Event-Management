@@ -172,7 +172,7 @@ export default function AdminDashboard({ initialSubTab = 'requests' }) {
     <div className="space-y-6">
       
       {/* Admin Header Banner */}
-      <div className="bg-slate-900 rounded-2xl p-6 text-white shadow-xl border border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div className="bg-gradient-to-r from-[#2a0508] via-[#1a0507] to-[#120305] rounded-2xl p-6 text-white shadow-xl border border-red-900/60 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 mb-1">
             <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-400 text-slate-950 uppercase tracking-wider">
@@ -191,7 +191,7 @@ export default function AdminDashboard({ initialSubTab = 'requests' }) {
         </div>
 
         {/* Top Tab Bar */}
-        <div className="flex flex-wrap items-center gap-1.5 bg-slate-800 p-1.5 rounded-xl border border-slate-700/80 text-xs font-semibold">
+        <div className="flex flex-wrap items-center gap-1.5 bg-[#1f0a0d]/90 p-1.5 rounded-xl border border-red-950/80 text-xs font-semibold">
           <button
             onClick={() => setActiveTab('requests')}
             className={`px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 ${
@@ -271,7 +271,7 @@ export default function AdminDashboard({ initialSubTab = 'requests' }) {
               <button
                 onClick={() => setRequestFilter('FORWARDED')}
                 className={`px-3 py-1.5 rounded-lg font-bold transition-all ${
-                  requestFilter === 'FORWARDED' ? 'bg-purple-600 text-white' : 'bg-purple-50 text-purple-700 hover:bg-purple-100'
+                  requestFilter === 'FORWARDED' ? 'bg-amber-600 text-white' : 'bg-amber-50 text-amber-800 hover:bg-amber-100'
                 }`}
               >
                 With CEO ({requests.filter(r => r.status === 'Forwarded for Approval').length})
@@ -343,7 +343,7 @@ export default function AdminDashboard({ initialSubTab = 'requests' }) {
                         req.status === 'Approved' ? 'bg-emerald-100 text-emerald-800' :
                         req.status === 'Rejected' ? 'bg-rose-100 text-rose-800' :
                         req.status === 'Need Clarification' ? 'bg-amber-100 text-amber-800' :
-                        req.status === 'Forwarded for Approval' ? 'bg-purple-100 text-purple-800' :
+                        req.status === 'Forwarded for Approval' ? 'bg-amber-100 text-amber-900 border border-amber-300' :
                         'bg-amber-100 text-amber-900'
                       }`}>
                         {req.status}
@@ -397,7 +397,7 @@ export default function AdminDashboard({ initialSubTab = 'requests' }) {
                               setActionDialog({ type: 'FORWARD', request: req });
                               setActionComment('Forwarding to CEO for final review.');
                             }}
-                            className="px-2.5 py-1.5 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-xs font-bold flex items-center gap-1 shadow-xs transition-colors"
+                            className="px-2.5 py-1.5 bg-gradient-to-r from-red-700 to-amber-600 hover:from-red-800 hover:to-amber-700 text-white rounded-lg text-xs font-bold flex items-center gap-1 shadow-xs transition-colors"
                             title="Forward to Higher Approver / CEO"
                           >
                             <SendHorizontal className="w-3 h-3" />
@@ -616,7 +616,7 @@ export default function AdminDashboard({ initialSubTab = 'requests' }) {
                       <div className="text-[11px] text-red-700 font-medium">{admin.institutionalEmail}</div>
                       {admin.phone && <div className="text-[11px] text-slate-600">📞 {admin.phone}</div>}
                       <span className={`inline-block mt-1 px-2 py-0.5 rounded text-[10px] font-bold ${
-                        admin.role === 'CEO' ? 'bg-purple-100 text-purple-800' : 'bg-amber-100 text-amber-800'
+                        admin.role === 'CEO' ? 'bg-amber-100 text-amber-900 border border-amber-300' : 'bg-red-100 text-red-900'
                       }`}>
                         {admin.role === 'CEO' ? 'CEO / Higher Approver' : 'Administrative Head'}
                       </span>
@@ -1054,7 +1054,7 @@ export default function AdminDashboard({ initialSubTab = 'requests' }) {
         <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-100">
             <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-              <RotateCcw className="w-5 h-5 text-indigo-600" />
+              <RotateCcw className="w-5 h-5 text-red-600" />
               Annual Roster Rollover
             </h3>
             <p className="text-xs text-slate-500 mt-1">
@@ -1086,7 +1086,7 @@ export default function AdminDashboard({ initialSubTab = 'requests' }) {
                   rolloverAcademicYear(nextYearString);
                   setShowRolloverModal(false);
                 }}
-                className="px-4 py-2 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg shadow-md"
+                className="px-4 py-2 text-xs font-bold text-white bg-gradient-to-r from-red-700 to-amber-600 hover:from-red-800 hover:to-amber-700 rounded-lg shadow-md"
               >
                 Apply Rollover
               </button>

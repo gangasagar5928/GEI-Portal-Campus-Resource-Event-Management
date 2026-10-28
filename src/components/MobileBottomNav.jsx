@@ -24,7 +24,7 @@ export default function MobileBottomNav({ activeTab, setActiveTab, onOpenLogin }
   return (
     <nav 
       aria-label="Mobile Navigation"
-      className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-slate-950/95 backdrop-blur-md border-t border-red-950/80 px-2 pt-1.5 pb-[max(env(safe-area-inset-bottom),0.5rem)] shadow-2xl"
+      className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#150406]/95 backdrop-blur-md border-t border-red-950/80 px-2 pt-1.5 pb-[max(env(safe-area-inset-bottom),0.5rem)] shadow-2xl"
     >
       <div className="flex items-center justify-around">
         {/* Schedule */}

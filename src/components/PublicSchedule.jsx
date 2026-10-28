@@ -54,7 +54,7 @@ export default function PublicSchedule({ onOpenRequest }) {
     <div className="space-y-6">
       
       {/* Hero Banner */}
-      <div className="bg-gradient-to-r from-red-950 via-stone-900 to-slate-950 rounded-2xl p-6 sm:p-8 text-white shadow-xl border border-red-900/60">
+      <div className="bg-gradient-to-r from-[#2a0508] via-[#1a0507] to-[#120305] rounded-2xl p-6 sm:p-8 text-white shadow-xl border border-red-900/60">
         <div className="max-w-3xl">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 text-xs font-semibold mb-3">
             <ShieldCheck className="w-3.5 h-3.5 text-amber-400" />

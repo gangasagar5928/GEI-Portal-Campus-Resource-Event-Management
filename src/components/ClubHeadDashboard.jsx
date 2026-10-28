@@ -234,7 +234,7 @@ export default function ClubHeadDashboard({ initialMode = 'my-requests', onSwitc
                           req.status === 'Approved' ? 'bg-emerald-100 text-emerald-800' :
                           req.status === 'Rejected' ? 'bg-rose-100 text-rose-800' :
                           req.status === 'Need Clarification' ? 'bg-amber-100 text-amber-800 animate-pulse' :
-                          req.status === 'Forwarded for Approval' ? 'bg-purple-100 text-purple-800' :
+                          req.status === 'Forwarded for Approval' ? 'bg-amber-100 text-amber-900 border border-amber-300' :
                           'bg-amber-100 text-amber-900'
                         }`}>
                           {req.status}

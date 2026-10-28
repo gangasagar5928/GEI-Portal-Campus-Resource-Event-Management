@@ -314,9 +314,9 @@ export default function LoginModal({ isOpen, onClose }) {
                       setIdentifier('ceo@gei.edu');
                       setPassword('Galgotias@2026');
                     }}
-                    className="p-2 rounded-lg bg-slate-50 hover:bg-purple-50 border border-slate-200 hover:border-purple-300 transition-colors text-left"
+                    className="p-2 rounded-lg bg-slate-50 hover:bg-rose-50 border border-slate-200 hover:border-red-300 transition-colors text-left"
                   >
-                    <span className="block font-bold text-[11px] text-purple-800">CEO / Lead</span>
+                    <span className="block font-bold text-[11px] text-red-800">CEO / Lead</span>
                     <span className="block text-[9px] text-slate-600 truncate">ceo@gei.edu</span>
                   </button>
                 </div>

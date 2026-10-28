@@ -27,7 +27,7 @@ export default function Navbar({ activeTab, setActiveTab, onOpenLogin }) {
   ).length;
 
   return (
-    <header className="bg-slate-950 text-white shadow-xl sticky top-0 z-50 border-b border-red-950/80">
+    <header className="bg-[#150406] text-white shadow-xl sticky top-0 z-50 border-b border-red-950/80">
       {/* Main Navbar */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 gap-4">
@@ -157,14 +157,14 @@ export default function Navbar({ activeTab, setActiveTab, onOpenLogin }) {
                 onClick={() => setActiveTab('ceo-approvals')}
                 className={`relative flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-semibold transition-all ${
                   activeTab === 'ceo-approvals'
-                    ? 'bg-purple-600 text-white shadow-md'
+                    ? 'bg-gradient-to-r from-red-700 to-amber-600 text-white shadow-md'
                     : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
                 }`}
               >
-                <CheckCircle2 className="w-4 h-4 text-purple-400" />
+                <CheckCircle2 className="w-4 h-4 text-amber-400" />
                 CEO Review Queue
                 {pendingCeoCount > 0 && (
-                  <span className="ml-1 px-1.5 py-0.2 bg-purple-500 text-white rounded-full text-[11px] font-bold animate-pulse">
+                  <span className="ml-1 px-1.5 py-0.2 bg-amber-500 text-slate-950 rounded-full text-[11px] font-bold animate-pulse">
                     {pendingCeoCount}
                   </span>
                 )}
@@ -182,7 +182,7 @@ export default function Navbar({ activeTab, setActiveTab, onOpenLogin }) {
                 <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-800 border border-slate-700/80 text-xs shadow-xs">
                   <div className={`w-2 h-2 rounded-full ${
                     isAdmin ? 'bg-amber-400 ring-2 ring-amber-400/20' :
-                    isCeo ? 'bg-purple-400 ring-2 ring-purple-400/20' :
+                    isCeo ? 'bg-amber-400 ring-2 ring-amber-400/20' :
                     isClubHead ? 'bg-emerald-400 ring-2 ring-emerald-400/20' : 'bg-slate-400'
                   }`} />
                   <div className="text-left hidden sm:block">
@@ -221,7 +221,7 @@ export default function Navbar({ activeTab, setActiveTab, onOpenLogin }) {
       </div>
 
       {/* Mobile navigation tab strip */}
-      <div className="md:hidden flex overflow-x-auto border-t border-red-950/80 bg-slate-950/95 px-2 py-1.5 gap-1 text-xs">
+      <div className="md:hidden flex overflow-x-auto border-t border-red-950/80 bg-[#150406]/95 px-2 py-1.5 gap-1 text-xs">
         <button
           onClick={() => setActiveTab('schedule')}
           className={`px-3 py-1.5 rounded-md whitespace-nowrap font-medium ${
@@ -285,7 +285,7 @@ export default function Navbar({ activeTab, setActiveTab, onOpenLogin }) {
           <button
             onClick={() => setActiveTab('ceo-approvals')}
             className={`px-3 py-1.5 rounded-md whitespace-nowrap font-medium ${
-              activeTab === 'ceo-approvals' ? 'bg-purple-600 text-white' : 'text-slate-400'
+              activeTab === 'ceo-approvals' ? 'bg-red-700 text-white' : 'text-slate-400'
             }`}
           >
             CEO Queue ({pendingCeoCount})

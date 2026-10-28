@@ -27,7 +27,7 @@ export default function RequestDetailsModal({ request, onClose, onActionClick, c
       case 'Need Clarification':
         return <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-800 flex items-center gap-1.5"><HelpCircle className="w-3.5 h-3.5" /> Need Clarification</span>;
       case 'Forwarded for Approval':
-        return <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-purple-100 text-purple-800 flex items-center gap-1.5"><SendHorizontal className="w-3.5 h-3.5" /> Forwarded to CEO</span>;
+        return <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-900 border border-amber-300 flex items-center gap-1.5"><SendHorizontal className="w-3.5 h-3.5" /> Forwarded to CEO</span>;
       default:
         return <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-900 flex items-center gap-1.5"><Clock className="w-3.5 h-3.5" /> Under Review</span>;
     }
