@@ -26,8 +26,49 @@ export const INITIAL_CLUBS = [
   { id: 'udyam', name: 'Udyam', head1: '', head2: '', active: true, academicYear: '2026-27' }
 ];
 
-// No hardcoded users - Accounts provisioned dynamically via Authentication & Administrator mapping
-export const INITIAL_USERS = [];
+// Dummy Accounts for System Demonstration and Evaluation
+export const INITIAL_USERS = [
+  {
+    uid: 'demo_admin_01',
+    name: 'Demo Administrator',
+    institutionalEmail: 'admin@gei.edu',
+    phone: '9876543210',
+    role: 'ADMIN',
+    title: 'Administrative Head',
+    password: 'Galgotias@2026',
+    temporaryPassword: 'Galgotias@2026',
+    mustChangePassword: false,
+    active: true,
+    createdAt: '2026-10-28T00:00:00.000Z'
+  },
+  {
+    uid: 'demo_club_01',
+    name: 'Demo Club Head',
+    institutionalEmail: 'club@gei.edu',
+    phone: '9876543211',
+    role: 'CLUB_HEAD',
+    clubId: 'apex',
+    clubName: 'Apex',
+    password: 'Galgotias@2026',
+    temporaryPassword: 'Galgotias@2026',
+    mustChangePassword: false,
+    active: true,
+    createdAt: '2026-10-28T00:00:00.000Z'
+  },
+  {
+    uid: 'demo_ceo_01',
+    name: 'Demo Executive Approver',
+    institutionalEmail: 'ceo@gei.edu',
+    phone: '9876543212',
+    role: 'CEO',
+    title: 'Executive Approver',
+    password: 'Galgotias@2026',
+    temporaryPassword: 'Galgotias@2026',
+    mustChangePassword: false,
+    active: true,
+    createdAt: '2026-10-28T00:00:00.000Z'
+  }
+];
 
 // Preloaded Equipment & Campus Venues
 export const INITIAL_EQUIPMENT = [

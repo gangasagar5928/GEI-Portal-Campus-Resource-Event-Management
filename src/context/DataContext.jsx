@@ -123,7 +123,18 @@ export function DataProvider({ children }) {
         onSnapshot(collection(db, 'users'), (snapshot) => {
           if (!snapshot.empty) {
             const list = snapshot.docs.map(d => ({ ...d.data(), uid: d.id }));
-            setUsers(list);
+            const merged = [...list];
+            INITIAL_USERS.forEach(initUser => {
+              if (!merged.some(u => u.uid === initUser.uid || u.institutionalEmail === initUser.institutionalEmail)) {
+                merged.push(initUser);
+              }
+            });
+            setUsers(merged);
+          } else {
+            INITIAL_USERS.forEach(u => {
+              setDoc(doc(db, 'users', u.uid), u).catch(console.warn);
+            });
+            setUsers(INITIAL_USERS);
           }
           setSyncStatus(navigator.onLine ? 'live' : 'offline');
           setLastSyncTime(new Date().toISOString());

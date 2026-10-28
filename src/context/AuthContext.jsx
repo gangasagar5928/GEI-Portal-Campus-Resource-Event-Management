@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { INITIAL_USERS } from '../data/initialRegistry';
 
 const AuthContext = createContext(null);
 
@@ -35,8 +36,11 @@ export function AuthProvider({ children }) {
     const cleanEmailInput = rawInput.toLowerCase();
     const cleanPhoneInput = cleanPhone(rawInput);
 
+    // Merge dynamic users with baseline demo users
+    const allUsers = [...usersList, ...INITIAL_USERS];
+
     // Find user by institutional email OR phone number
-    const match = usersList.find(u => {
+    const match = allUsers.find(u => {
       const emailMatch = u.institutionalEmail && u.institutionalEmail.toLowerCase() === cleanEmailInput;
       const phoneMatch = u.phone && cleanPhone(u.phone) === cleanPhoneInput && cleanPhoneInput.length >= 10;
       return emailMatch || phoneMatch;
