@@ -96,8 +96,245 @@ export const REQUEST_CATEGORIES = [
   { id: 'special_event', label: 'High-Value / Exceptional Event', requiresHigherApproval: true, description: 'Celebrity guest, multi-day fest, requires CEO approval' }
 ];
 
-// Confirmed schedule events (populated dynamically upon institutional approval)
-export const INITIAL_SCHEDULE = [];
+// Confirmed schedule events for campus auditoriums (2026-27 Academic Year)
+export const INITIAL_SCHEDULE = [
+  {
+    eventId: 'sch-2026-001',
+    requestId: 'req-2026-001',
+    clubId: 'apex',
+    clubName: 'Apex',
+    title: 'Galgotias Annual Technical Symposium (TechFest 2026)',
+    publicDescription: 'Annual student technical paper presentation, project exhibition, and competitive coding finals.',
+    venue: 'Main Auditorium (Block C)',
+    date: '2026-11-05',
+    startTime: '09:30',
+    endTime: '17:00',
+    expectedAttendance: 850,
+    category: 'special_event',
+    status: 'Confirmed'
+  },
+  {
+    eventId: 'sch-2026-002',
+    requestId: 'req-2026-002',
+    clubId: 'nrityax',
+    clubName: 'NrityaX',
+    title: 'Inter-College Cultural Dance Showcase',
+    publicDescription: 'Semi-classical, folk, and contemporary choreography performances celebrating student cultural talent.',
+    venue: 'Mini Auditorium (Block E)',
+    date: '2026-11-08',
+    startTime: '14:00',
+    endTime: '18:30',
+    expectedAttendance: 350,
+    category: 'auditorium',
+    status: 'Confirmed'
+  },
+  {
+    eventId: 'sch-2026-003',
+    requestId: 'req-2026-003',
+    clubId: 'athlon',
+    clubName: 'Athlon',
+    title: 'Annual Sports Meet Valedictory & Commendation',
+    publicDescription: 'Ceremonial presentation of annual championship trophies, track awards, and athlete commendations.',
+    venue: 'Open Air Amphitheatre',
+    date: '2026-11-12',
+    startTime: '16:00',
+    endTime: '20:00',
+    expectedAttendance: 1200,
+    category: 'venue_equipment',
+    status: 'Confirmed'
+  },
+  {
+    eventId: 'sch-2026-004',
+    requestId: 'req-2026-004',
+    clubId: 'chromatrix',
+    clubName: 'Chromatrix',
+    title: 'UI/UX Design Systems Workshop & Sprint',
+    publicDescription: 'Intensive student workshop on design thinking, accessibility guidelines, wireframing, and component libraries.',
+    venue: 'Central Seminar Hall A',
+    date: '2026-11-15',
+    startTime: '10:00',
+    endTime: '15:00',
+    expectedAttendance: 180,
+    category: 'venue_equipment',
+    status: 'Confirmed'
+  }
+];
 
-// Requests (populated dynamically via student council submissions)
-export const INITIAL_REQUESTS = [];
+// Requisition Requests across approval workflow states
+export const INITIAL_REQUESTS = [
+  {
+    requestId: 'req-2026-101',
+    clubId: 'apex',
+    clubName: 'Apex',
+    submittedByUid: 'demo_club_01',
+    submittedByName: 'Demo Club Head',
+    category: 'auditorium',
+    title: 'Annual Hackathon Opening Ceremony & Keynote',
+    description: 'Inaugural ceremony for 36-hour inter-college hackathon with industry keynote speakers.',
+    requestedDate: '2026-11-20',
+    startTime: '09:00',
+    endTime: '13:00',
+    venue: 'Main Auditorium (Block C)',
+    expectedAttendance: 450,
+    equipmentRequirements: [
+      { name: 'Cordless Handheld Microphones', qty: 2 },
+      { name: 'Digital Podium System', qty: 1 }
+    ],
+    additionalNotes: 'Need AV sound check by 08:30 AM.',
+    status: 'Submitted',
+    currentApproverRole: 'ADMIN',
+    requiresHigherApproval: true,
+    createdAt: '2026-10-28T09:00:00.000Z',
+    updatedAt: '2026-10-28T09:00:00.000Z',
+    history: [
+      {
+        id: 'h-1',
+        action: 'SUBMITTED',
+        actorName: 'Demo Club Head',
+        actorRole: 'CLUB_HEAD',
+        comment: 'Requisition submitted for annual hackathon inaugural ceremony.',
+        timestamp: '2026-10-28T09:00:00.000Z'
+      }
+    ]
+  },
+  {
+    requestId: 'req-2026-102',
+    clubId: 'enthiran',
+    clubName: 'Enthiran',
+    submittedByUid: 'club_lead_enthiran',
+    submittedByName: 'Enthiran Lead',
+    category: 'special_event',
+    title: 'National Robotics Expo & BattleBots 2026',
+    description: 'National robotics arena competition with high attendance and live technical demonstrations.',
+    requestedDate: '2026-11-25',
+    startTime: '10:00',
+    endTime: '18:00',
+    venue: 'Main Auditorium (Block C)',
+    expectedAttendance: 750,
+    equipmentRequirements: [
+      { name: 'High-Lumen Laser Projector', qty: 1 },
+      { name: 'Heavy Duty Sound Console (32 Ch)', qty: 1 },
+      { name: 'Power Extension Spools (25m)', qty: 4 }
+    ],
+    additionalNotes: 'Safety barricades around arena arena pre-arranged.',
+    status: 'Forwarded for Approval',
+    currentApproverRole: 'CEO',
+    requiresHigherApproval: true,
+    createdAt: '2026-10-27T11:00:00.000Z',
+    updatedAt: '2026-10-28T10:15:00.000Z',
+    history: [
+      {
+        id: 'h-2',
+        action: 'SUBMITTED',
+        actorName: 'Enthiran Lead',
+        actorRole: 'CLUB_HEAD',
+        comment: 'National robotics expo request submitted.',
+        timestamp: '2026-10-27T11:00:00.000Z'
+      },
+      {
+        id: 'h-3',
+        action: 'FORWARDED_FOR_APPROVAL',
+        actorName: 'Demo Administrator',
+        actorRole: 'ADMIN',
+        comment: 'Auditorium slot checked and available. High-attendance event forwarded for final executive sanction.',
+        timestamp: '2026-10-28T10:15:00.000Z'
+      }
+    ]
+  },
+  {
+    requestId: 'req-2026-103',
+    clubId: 'rangmanch',
+    clubName: 'Rangmanch',
+    submittedByUid: 'club_lead_rangmanch',
+    submittedByName: 'Rangmanch Lead',
+    category: 'venue_equipment',
+    title: 'Theatrical Drama Stage Rehearsal & Lighting Check',
+    description: 'Technical lighting rehearsal and stage orientation prior to youth festival competition.',
+    requestedDate: '2026-11-18',
+    startTime: '15:00',
+    endTime: '20:00',
+    venue: 'Mini Auditorium (Block E)',
+    expectedAttendance: 150,
+    equipmentRequirements: [
+      { name: 'LED Stage Lighting Bar', qty: 4 },
+      { name: 'Stage Monitors (Active)', qty: 2 }
+    ],
+    additionalNotes: 'Requires low ambient lighting for technical cue testing.',
+    status: 'Need Clarification',
+    currentApproverRole: 'CLUB_HEAD',
+    requiresHigherApproval: false,
+    clarificationPrompt: 'Please provide stage safety clearance and faculty coordinator sign-off for evening lighting.',
+    createdAt: '2026-10-28T12:00:00.000Z',
+    updatedAt: '2026-10-28T14:30:00.000Z',
+    history: [
+      {
+        id: 'h-4',
+        action: 'SUBMITTED',
+        actorName: 'Rangmanch Lead',
+        actorRole: 'CLUB_HEAD',
+        comment: 'Dress rehearsal request submitted.',
+        timestamp: '2026-10-28T12:00:00.000Z'
+      },
+      {
+        id: 'h-5',
+        action: 'NEED_CLARIFICATION',
+        actorName: 'Demo Administrator',
+        actorRole: 'ADMIN',
+        comment: 'Please provide stage safety clearance and faculty coordinator sign-off for evening lighting.',
+        timestamp: '2026-10-28T14:30:00.000Z'
+      }
+    ]
+  },
+  {
+    requestId: 'req-2026-001',
+    clubId: 'apex',
+    clubName: 'Apex',
+    submittedByUid: 'demo_club_01',
+    submittedByName: 'Demo Club Head',
+    category: 'special_event',
+    title: 'Galgotias Annual Technical Symposium (TechFest 2026)',
+    description: 'Annual technical symposium paper presentations, hardware projects, and code sprints.',
+    requestedDate: '2026-11-05',
+    startTime: '09:30',
+    endTime: '17:00',
+    venue: 'Main Auditorium (Block C)',
+    expectedAttendance: 850,
+    equipmentRequirements: [
+      { name: 'High-Lumen Laser Projector', qty: 2 },
+      { name: 'Cordless Handheld Microphones', qty: 4 },
+      { name: 'Digital Podium System', qty: 1 }
+    ],
+    additionalNotes: 'VIP guests arriving at 10:00 AM.',
+    status: 'Approved',
+    currentApproverRole: 'COMPLETED',
+    requiresHigherApproval: true,
+    createdAt: '2026-10-25T10:00:00.000Z',
+    updatedAt: '2026-10-26T11:00:00.000Z',
+    history: [
+      {
+        id: 'h-6',
+        action: 'SUBMITTED',
+        actorName: 'Demo Club Head',
+        actorRole: 'CLUB_HEAD',
+        comment: 'Requisition submitted.',
+        timestamp: '2026-10-25T10:00:00.000Z'
+      },
+      {
+        id: 'h-7',
+        action: 'FORWARDED_FOR_APPROVAL',
+        actorName: 'Demo Administrator',
+        actorRole: 'ADMIN',
+        comment: 'Slot checked and technical requirements verified.',
+        timestamp: '2026-10-25T14:00:00.000Z'
+      },
+      {
+        id: 'h-8',
+        action: 'APPROVED',
+        actorName: 'Demo Executive Approver',
+        actorRole: 'CEO',
+        comment: 'Approved. Ensure audio coverage and crowd control.',
+        timestamp: '2026-10-26T11:00:00.000Z'
+      }
+    ]
+  }
+];

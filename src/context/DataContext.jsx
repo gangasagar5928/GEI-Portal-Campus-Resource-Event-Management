@@ -43,8 +43,14 @@ export function DataProvider({ children }) {
   const [clubs, setClubs] = useState(() => loadStored('clubs', INITIAL_CLUBS));
   const [users, setUsers] = useState(() => loadStored('users', INITIAL_USERS));
   const [equipment, setEquipment] = useState(() => loadStored('equipment', INITIAL_EQUIPMENT));
-  const [schedule, setSchedule] = useState(() => loadStored('schedule', INITIAL_SCHEDULE));
-  const [requests, setRequests] = useState(() => loadStored('requests', INITIAL_REQUESTS));
+  const [schedule, setSchedule] = useState(() => {
+    const stored = loadStored('schedule', INITIAL_SCHEDULE);
+    return stored && stored.length > 0 ? stored : INITIAL_SCHEDULE;
+  });
+  const [requests, setRequests] = useState(() => {
+    const stored = loadStored('requests', INITIAL_REQUESTS);
+    return stored && stored.length > 0 ? stored : INITIAL_REQUESTS;
+  });
   const [academicYear, setAcademicYear] = useState(() => loadStored('academic_year', '2026-27'));
 
   // Live Sync & Network State for Mobile PWA
@@ -101,7 +107,18 @@ export function DataProvider({ children }) {
         onSnapshot(collection(db, 'requests'), (snapshot) => {
           if (!snapshot.empty) {
             const list = snapshot.docs.map(d => ({ ...d.data(), requestId: d.id }));
-            setRequests(list);
+            const merged = [...list];
+            INITIAL_REQUESTS.forEach(initReq => {
+              if (!merged.some(r => r.requestId === initReq.requestId)) {
+                merged.push(initReq);
+              }
+            });
+            setRequests(merged);
+          } else {
+            INITIAL_REQUESTS.forEach(r => {
+              setDoc(doc(db, 'requests', r.requestId), r).catch(console.warn);
+            });
+            setRequests(INITIAL_REQUESTS);
           }
           setSyncStatus(navigator.onLine ? 'live' : 'offline');
           setLastSyncTime(new Date().toISOString());
@@ -112,7 +129,18 @@ export function DataProvider({ children }) {
         onSnapshot(collection(db, 'schedule'), (snapshot) => {
           if (!snapshot.empty) {
             const list = snapshot.docs.map(d => ({ ...d.data(), eventId: d.id }));
-            setSchedule(list);
+            const merged = [...list];
+            INITIAL_SCHEDULE.forEach(initSch => {
+              if (!merged.some(s => s.eventId === initSch.eventId)) {
+                merged.push(initSch);
+              }
+            });
+            setSchedule(merged);
+          } else {
+            INITIAL_SCHEDULE.forEach(s => {
+              setDoc(doc(db, 'schedule', s.eventId), s).catch(console.warn);
+            });
+            setSchedule(INITIAL_SCHEDULE);
           }
           setSyncStatus(navigator.onLine ? 'live' : 'offline');
           setLastSyncTime(new Date().toISOString());
