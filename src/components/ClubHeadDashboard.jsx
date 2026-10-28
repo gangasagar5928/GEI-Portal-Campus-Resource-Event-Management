@@ -149,7 +149,7 @@ export default function ClubHeadDashboard({ initialMode = 'my-requests', onSwitc
       <div className="bg-white rounded-2xl p-5 sm:p-6 border border-slate-200/80 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="text-xs font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-2 py-0.5 rounded border border-blue-200/60">
+            <span className="text-xs font-bold uppercase tracking-wider text-red-700 bg-red-50 px-2 py-0.5 rounded border border-red-200/60">
               {currentUser?.clubName || 'Authorized Club'}
             </span>
             <span className="text-xs text-slate-400 font-medium">Head: {currentUser?.name}</span>
@@ -168,7 +168,7 @@ export default function ClubHeadDashboard({ initialMode = 'my-requests', onSwitc
             onClick={() => setActiveSubTab('my-requests')}
             className={`flex-1 sm:flex-initial px-4 py-2 rounded-xl text-xs font-bold transition-all ${
               activeSubTab === 'my-requests'
-                ? 'bg-blue-600 text-white shadow-md shadow-blue-600/20'
+                ? 'bg-gradient-to-r from-red-700 to-amber-600 text-white shadow-md shadow-red-700/20'
                 : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
             }`}
           >
@@ -235,7 +235,7 @@ export default function ClubHeadDashboard({ initialMode = 'my-requests', onSwitc
                           req.status === 'Rejected' ? 'bg-rose-100 text-rose-800' :
                           req.status === 'Need Clarification' ? 'bg-amber-100 text-amber-800 animate-pulse' :
                           req.status === 'Forwarded for Approval' ? 'bg-purple-100 text-purple-800' :
-                          'bg-blue-100 text-blue-800'
+                          'bg-amber-100 text-amber-900'
                         }`}>
                           {req.status}
                         </span>
@@ -245,11 +245,11 @@ export default function ClubHeadDashboard({ initialMode = 'my-requests', onSwitc
                     {/* Booking Details Strip */}
                     <div className="mt-3 flex flex-wrap gap-4 text-xs text-slate-600 bg-slate-50 p-2.5 rounded-lg border border-slate-100">
                       <div className="flex items-center gap-1.5">
-                        <MapPin className="w-3.5 h-3.5 text-blue-600" />
+                        <MapPin className="w-3.5 h-3.5 text-red-600" />
                         <span className="font-semibold">{req.venue}</span>
                       </div>
                       <div className="flex items-center gap-1.5">
-                        <Calendar className="w-3.5 h-3.5 text-indigo-600" />
+                        <Calendar className="w-3.5 h-3.5 text-amber-600" />
                         <span>{req.requestedDate}</span>
                       </div>
                       <div className="flex items-center gap-1.5">
@@ -291,7 +291,7 @@ export default function ClubHeadDashboard({ initialMode = 'my-requests', onSwitc
                       </span>
                       <button
                         onClick={() => setSelectedRequestForView(req)}
-                        className="flex items-center gap-1 text-blue-600 hover:text-blue-800 font-semibold"
+                        className="flex items-center gap-1 text-red-700 hover:text-red-900 font-semibold"
                       >
                         <Eye className="w-3.5 h-3.5" />
                         View Full Details & History
@@ -374,7 +374,7 @@ export default function ClubHeadDashboard({ initialMode = 'my-requests', onSwitc
                   <select
                     value={category}
                     onChange={(e) => setCategory(e.target.value)}
-                    className="w-full px-3.5 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium"
+                    className="w-full px-3.5 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600 font-medium"
                   >
                     {REQUEST_CATEGORIES.map(cat => (
                       <option key={cat.id} value={cat.id}>
@@ -396,7 +396,7 @@ export default function ClubHeadDashboard({ initialMode = 'my-requests', onSwitc
                   placeholder="e.g. Annual Hackathon 2026 Opening Keynote"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  className="w-full px-3.5 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800 font-medium"
+                  className="w-full px-3.5 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600 text-slate-800 font-medium"
                 />
               </div>
 
@@ -411,7 +411,7 @@ export default function ClubHeadDashboard({ initialMode = 'my-requests', onSwitc
                   placeholder="Provide complete event objective, student participation scope, guest speakers, and schedule flow..."
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  className="w-full px-3.5 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800 font-medium"
+                  className="w-full px-3.5 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600 text-slate-800 font-medium"
                 />
               </div>
 
@@ -426,7 +426,7 @@ export default function ClubHeadDashboard({ initialMode = 'my-requests', onSwitc
                     required
                     value={requestedDate}
                     onChange={(e) => setRequestedDate(e.target.value)}
-                    className="w-full px-3 py-2 text-xs bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium"
+                    className="w-full px-3 py-2 text-xs bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600 font-medium"
                   />
                 </div>
 
@@ -439,7 +439,7 @@ export default function ClubHeadDashboard({ initialMode = 'my-requests', onSwitc
                     required
                     value={startTime}
                     onChange={(e) => setStartTime(e.target.value)}
-                    className="w-full px-3 py-2 text-xs bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium"
+                    className="w-full px-3 py-2 text-xs bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600 font-medium"
                   />
                 </div>
 
@@ -452,7 +452,7 @@ export default function ClubHeadDashboard({ initialMode = 'my-requests', onSwitc
                     required
                     value={endTime}
                     onChange={(e) => setEndTime(e.target.value)}
-                    className="w-full px-3 py-2 text-xs bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium"
+                    className="w-full px-3 py-2 text-xs bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600 font-medium"
                   />
                 </div>
               </div>
@@ -466,7 +466,7 @@ export default function ClubHeadDashboard({ initialMode = 'my-requests', onSwitc
                   <select
                     value={venue}
                     onChange={(e) => setVenue(e.target.value)}
-                    className="w-full px-3.5 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium"
+                    className="w-full px-3.5 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600 font-medium"
                   >
                     {VENUES.map(v => (
                       <option key={v.id} value={v.name}>
@@ -487,7 +487,7 @@ export default function ClubHeadDashboard({ initialMode = 'my-requests', onSwitc
                     max="3000"
                     value={expectedAttendance}
                     onChange={(e) => setExpectedAttendance(e.target.value)}
-                    className="w-full px-3.5 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium"
+                    className="w-full px-3.5 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600 font-medium"
                   />
                 </div>
               </div>
@@ -542,10 +542,10 @@ export default function ClubHeadDashboard({ initialMode = 'my-requests', onSwitc
                           disabled={isAdded || eq.quantityAvailable === 0}
                           className={`px-2.5 py-1 rounded-md text-[11px] font-medium flex items-center gap-1 transition-all ${
                             isAdded
-                              ? 'bg-blue-100 text-blue-700 cursor-default'
+                              ? 'bg-red-100 text-red-800 cursor-default'
                               : eq.quantityAvailable === 0
                               ? 'bg-slate-100 text-slate-400 cursor-not-allowed'
-                              : 'bg-white border border-slate-200 hover:border-blue-400 text-slate-700'
+                              : 'bg-white border border-slate-200 hover:border-amber-400 text-slate-700'
                           }`}
                         >
                           <Plus className="w-3 h-3" />
@@ -567,7 +567,7 @@ export default function ClubHeadDashboard({ initialMode = 'my-requests', onSwitc
                   placeholder="e.g. VIP guest arrival time, special banner setup, extra microphones..."
                   value={additionalNotes}
                   onChange={(e) => setAdditionalNotes(e.target.value)}
-                  className="w-full px-3.5 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800"
+                  className="w-full px-3.5 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600 text-slate-800"
                 />
               </div>
 
@@ -587,7 +587,7 @@ export default function ClubHeadDashboard({ initialMode = 'my-requests', onSwitc
                   className={`px-6 py-2.5 rounded-xl text-xs font-bold text-white shadow-lg transition-all flex items-center gap-1.5 ${
                     conflictCheck.hasConflict
                       ? 'bg-slate-400 cursor-not-allowed'
-                      : 'bg-emerald-600 hover:bg-emerald-700 shadow-emerald-600/30'
+                      : 'bg-gradient-to-r from-red-700 to-amber-600 hover:from-red-800 hover:to-amber-700 shadow-red-700/30'
                   }`}
                 >
                   <SendHorizontal className="w-3.5 h-3.5" />
@@ -628,7 +628,7 @@ export default function ClubHeadDashboard({ initialMode = 'my-requests', onSwitc
                 value={clarificationText}
                 onChange={(e) => setClarificationText(e.target.value)}
                 placeholder="Provide requested details (e.g., exact security headcount, verified external guests list)..."
-                className="w-full p-3 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full p-3 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600"
               />
             </div>
 
@@ -642,7 +642,7 @@ export default function ClubHeadDashboard({ initialMode = 'my-requests', onSwitc
               <button
                 onClick={handleSendClarification}
                 disabled={!clarificationText.trim()}
-                className="px-4 py-2 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-md disabled:bg-slate-400"
+                className="px-4 py-2 text-xs font-bold text-white bg-gradient-to-r from-red-700 to-amber-600 hover:from-red-800 hover:to-amber-700 rounded-lg shadow-md disabled:bg-slate-400"
               >
                 Submit Response
               </button>

@@ -23,7 +23,7 @@ const LoginModal = lazy(() => import('./components/LoginModal'));
 
 const LoadingFallback = () => (
   <div className="flex items-center justify-center py-24 text-slate-400">
-    <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+    <Loader2 className="w-8 h-8 animate-spin text-red-700" />
   </div>
 );
 
@@ -172,13 +172,13 @@ function AppContent() {
                   value={newPasswordInput}
                   onChange={(e) => setNewPasswordInput(e.target.value)}
                   placeholder="At least 6 characters..."
-                  className="w-full p-2.5 text-xs border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium"
+                  className="w-full p-2.5 text-xs border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600 font-medium"
                 />
               </div>
 
               <button
                 type="submit"
-                className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow-md transition-colors"
+                className="w-full py-2.5 bg-gradient-to-r from-red-700 to-amber-600 hover:from-red-800 hover:to-amber-700 text-white rounded-xl text-xs font-bold shadow-md shadow-red-700/30 transition-colors"
               >
                 Set Password & Proceed
               </button>

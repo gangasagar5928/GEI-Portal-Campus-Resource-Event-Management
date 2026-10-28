@@ -180,7 +180,7 @@ export default function AdminDashboard({ initialSubTab = 'requests' }) {
             </span>
             <span className="text-xs text-slate-400">{currentUser?.name || 'Administrator'}</span>
             <span className="text-slate-600">•</span>
-            <span className="text-xs text-blue-400 font-medium">Session: {academicYear}</span>
+            <span className="text-xs text-amber-400 font-medium">Session: {academicYear}</span>
           </div>
           <h1 className="text-2xl font-black">
             Central Campus Administration Console
@@ -195,7 +195,7 @@ export default function AdminDashboard({ initialSubTab = 'requests' }) {
           <button
             onClick={() => setActiveTab('requests')}
             className={`px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 ${
-              activeTab === 'requests' ? 'bg-blue-600 text-white' : 'text-slate-300 hover:text-white'
+              activeTab === 'requests' ? 'bg-gradient-to-r from-red-700 to-amber-600 text-white shadow-md' : 'text-slate-300 hover:text-white'
             }`}
           >
             <FileText className="w-3.5 h-3.5" />
@@ -205,7 +205,7 @@ export default function AdminDashboard({ initialSubTab = 'requests' }) {
           <button
             onClick={() => setActiveTab('schedule')}
             className={`px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 ${
-              activeTab === 'schedule' ? 'bg-blue-600 text-white' : 'text-slate-300 hover:text-white'
+              activeTab === 'schedule' ? 'bg-gradient-to-r from-red-700 to-amber-600 text-white shadow-md' : 'text-slate-300 hover:text-white'
             }`}
           >
             <Calendar className="w-3.5 h-3.5" />
@@ -215,7 +215,7 @@ export default function AdminDashboard({ initialSubTab = 'requests' }) {
           <button
             onClick={() => setActiveTab('equipment')}
             className={`px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 ${
-              activeTab === 'equipment' ? 'bg-blue-600 text-white' : 'text-slate-300 hover:text-white'
+              activeTab === 'equipment' ? 'bg-gradient-to-r from-red-700 to-amber-600 text-white shadow-md' : 'text-slate-300 hover:text-white'
             }`}
           >
             <Package className="w-3.5 h-3.5" />
@@ -225,7 +225,7 @@ export default function AdminDashboard({ initialSubTab = 'requests' }) {
           <button
             onClick={() => setActiveTab('registry')}
             className={`px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 ${
-              activeTab === 'registry' ? 'bg-blue-600 text-white' : 'text-slate-300 hover:text-white'
+              activeTab === 'registry' ? 'bg-gradient-to-r from-red-700 to-amber-600 text-white shadow-md' : 'text-slate-300 hover:text-white'
             }`}
           >
             <Users className="w-3.5 h-3.5" />
@@ -255,7 +255,7 @@ export default function AdminDashboard({ initialSubTab = 'requests' }) {
               <button
                 onClick={() => setRequestFilter('PENDING')}
                 className={`px-3 py-1.5 rounded-lg font-bold transition-all ${
-                  requestFilter === 'PENDING' ? 'bg-blue-600 text-white' : 'bg-blue-50 text-blue-700 hover:bg-blue-100'
+                  requestFilter === 'PENDING' ? 'bg-red-700 text-white' : 'bg-red-50 text-red-800 hover:bg-red-100'
                 }`}
               >
                 Pending Review ({requests.filter(r => r.status === 'Submitted' || r.status === 'Under Review').length})
@@ -305,7 +305,7 @@ export default function AdminDashboard({ initialSubTab = 'requests' }) {
                       <div className="flex items-center gap-2">
                         <span className="text-xs font-bold text-slate-500">{req.requestId}</span>
                         <span className="text-slate-300">•</span>
-                        <span className="px-2 py-0.5 rounded text-xs font-bold bg-blue-50 text-blue-700">
+                        <span className="px-2 py-0.5 rounded text-xs font-bold bg-red-50 text-red-800">
                           {req.clubName}
                         </span>
                         <span className="text-slate-300">•</span>
@@ -344,7 +344,7 @@ export default function AdminDashboard({ initialSubTab = 'requests' }) {
                         req.status === 'Rejected' ? 'bg-rose-100 text-rose-800' :
                         req.status === 'Need Clarification' ? 'bg-amber-100 text-amber-800' :
                         req.status === 'Forwarded for Approval' ? 'bg-purple-100 text-purple-800' :
-                        'bg-blue-100 text-blue-800'
+                        'bg-amber-100 text-amber-900'
                       }`}>
                         {req.status}
                       </span>
@@ -409,7 +409,7 @@ export default function AdminDashboard({ initialSubTab = 'requests' }) {
                       {/* View Details Link */}
                       <button
                         onClick={() => setSelectedRequestForModal(req)}
-                        className="text-xs text-blue-600 hover:text-blue-800 font-semibold flex items-center gap-1"
+                        className="text-xs text-red-700 hover:text-red-900 font-semibold flex items-center gap-1"
                       >
                         <Eye className="w-3.5 h-3.5" />
                         Full Details & Audit Trail
@@ -442,7 +442,7 @@ export default function AdminDashboard({ initialSubTab = 'requests' }) {
             </div>
             <button
               onClick={() => setShowAddEventModal(true)}
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-md transition-colors"
+              className="px-4 py-2 bg-gradient-to-r from-red-700 to-amber-600 hover:from-red-800 hover:to-amber-700 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-md shadow-red-700/25 transition-colors"
             >
               <Plus className="w-4 h-4" />
               Add Direct Institutional Event
@@ -473,7 +473,7 @@ export default function AdminDashboard({ initialSubTab = 'requests' }) {
                       </td>
                       <td className="p-3.5 font-semibold text-slate-800 max-w-xs truncate">{evt.title}</td>
                       <td className="p-3.5">
-                        <span className="px-2 py-0.5 bg-blue-50 text-blue-700 rounded text-[11px] font-bold">
+                        <span className="px-2 py-0.5 bg-red-50 text-red-800 rounded text-[11px] font-bold">
                           {evt.clubName}
                         </span>
                       </td>
@@ -530,7 +530,7 @@ export default function AdminDashboard({ initialSubTab = 'requests' }) {
                 <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
                   <div>
                     <span className="text-[10px] text-slate-400 uppercase font-bold block">Available</span>
-                    <span className="text-xl font-extrabold text-blue-600">
+                    <span className="text-xl font-extrabold text-amber-600">
                       {eq.quantityAvailable} <span className="text-xs font-normal text-slate-400">/ {eq.quantityTotal}</span>
                     </span>
                   </div>
@@ -545,7 +545,7 @@ export default function AdminDashboard({ initialSubTab = 'requests' }) {
                         }
                       }
                     }}
-                    className="p-1.5 text-slate-500 hover:text-blue-600 hover:bg-slate-100 rounded-lg transition-colors text-xs font-semibold"
+                    className="p-1.5 text-slate-500 hover:text-amber-600 hover:bg-slate-100 rounded-lg transition-colors text-xs font-semibold"
                     title="Edit Inventory Quantities"
                   >
                     <Edit className="w-4 h-4" />
@@ -569,7 +569,7 @@ export default function AdminDashboard({ initialSubTab = 'requests' }) {
                 <h2 className="text-lg font-bold text-slate-900">
                   Preloaded Club Registry & Authorized User Mapping
                 </h2>
-                <span className="px-2 py-0.5 rounded bg-blue-100 text-blue-800 text-xs font-extrabold">
+                <span className="px-2 py-0.5 rounded bg-amber-100 text-amber-900 text-xs font-extrabold">
                   {academicYear}
                 </span>
               </div>
@@ -587,7 +587,7 @@ export default function AdminDashboard({ initialSubTab = 'requests' }) {
                   setMappedPhone('');
                   setMappedRole('ADMIN');
                 }}
-                className="px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 transition-colors shadow-xs"
+                className="px-3 py-2 bg-gradient-to-r from-red-700 to-amber-600 hover:from-red-800 hover:to-amber-700 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 transition-colors shadow-xs"
               >
                 <Plus className="w-3.5 h-3.5" />
                 + Provision Executive / Admin Account
@@ -613,7 +613,7 @@ export default function AdminDashboard({ initialSubTab = 'requests' }) {
                   <div key={admin.uid} className="p-3 rounded-xl bg-slate-50 border border-slate-200/80 text-xs flex items-start justify-between">
                     <div>
                       <div className="font-bold text-slate-900">{admin.name}</div>
-                      <div className="text-[11px] text-blue-700 font-medium">{admin.institutionalEmail}</div>
+                      <div className="text-[11px] text-red-700 font-medium">{admin.institutionalEmail}</div>
                       {admin.phone && <div className="text-[11px] text-slate-600">📞 {admin.phone}</div>}
                       <span className={`inline-block mt-1 px-2 py-0.5 rounded text-[10px] font-bold ${
                         admin.role === 'CEO' ? 'bg-purple-100 text-purple-800' : 'bg-amber-100 text-amber-800'
@@ -684,7 +684,7 @@ export default function AdminDashboard({ initialSubTab = 'requests' }) {
                                         resetUserPassword(head1User.uid);
                                         alert(`Temporary password reset for ${head1User.name} to Galgotias@2026`);
                                       }}
-                                      className="text-slate-400 hover:text-blue-600"
+                                      className="text-slate-400 hover:text-amber-600"
                                       title="Reset Password"
                                     >
                                       <Key className="w-3 h-3" />
@@ -702,7 +702,7 @@ export default function AdminDashboard({ initialSubTab = 'requests' }) {
                                 setMappedPhone('');
                                 setMappedRole('CLUB_HEAD');
                               }}
-                              className="px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100 font-bold text-[11px] inline-flex items-center gap-1 border border-blue-200/60"
+                              className="px-2.5 py-1 rounded-lg bg-red-50 text-red-800 hover:bg-red-100 font-bold text-[11px] inline-flex items-center gap-1 border border-red-200/60"
                             >
                               <Plus className="w-3 h-3" />
                               Assign Head 1
@@ -734,7 +734,7 @@ export default function AdminDashboard({ initialSubTab = 'requests' }) {
                                         resetUserPassword(head2User.uid);
                                         alert(`Temporary password reset for ${head2User.name} to Galgotias@2026`);
                                       }}
-                                      className="text-slate-400 hover:text-blue-600"
+                                      className="text-slate-400 hover:text-amber-600"
                                       title="Reset Password"
                                     >
                                       <Key className="w-3 h-3" />
@@ -752,7 +752,7 @@ export default function AdminDashboard({ initialSubTab = 'requests' }) {
                                 setMappedPhone('');
                                 setMappedRole('CLUB_HEAD');
                               }}
-                              className="px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100 font-bold text-[11px] inline-flex items-center gap-1 border border-blue-200/60"
+                              className="px-2.5 py-1 rounded-lg bg-red-50 text-red-800 hover:bg-red-100 font-bold text-[11px] inline-flex items-center gap-1 border border-red-200/60"
                             >
                               <Plus className="w-3 h-3" />
                               Assign Head 2
@@ -801,7 +801,7 @@ export default function AdminDashboard({ initialSubTab = 'requests' }) {
                     ? 'What specific details or security plans are required?'
                     : 'Add decision note or approvals recommendation...'
                 }
-                className="w-full p-3 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium"
+                className="w-full p-3 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600 font-medium"
               />
             </div>
 
@@ -814,7 +814,7 @@ export default function AdminDashboard({ initialSubTab = 'requests' }) {
               </button>
               <button
                 onClick={handleExecuteAction}
-                className="px-4 py-2 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-md"
+                className="px-4 py-2 text-xs font-bold text-white bg-gradient-to-r from-red-700 to-amber-600 hover:from-red-800 hover:to-amber-700 rounded-lg shadow-md"
               >
                 Confirm {actionDialog.type}
               </button>
@@ -830,7 +830,7 @@ export default function AdminDashboard({ initialSubTab = 'requests' }) {
         <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-100 animate-in fade-in zoom-in-95 duration-150">
             <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-              <ShieldCheck className="w-5 h-5 text-blue-600" />
+              <ShieldCheck className="w-5 h-5 text-red-600" />
               Provision Institutional Account
             </h3>
             <p className="text-xs text-slate-500 mt-1">
@@ -850,7 +850,7 @@ export default function AdminDashboard({ initialSubTab = 'requests' }) {
                   placeholder="e.g. Student Head or Officer Name"
                   value={mappedName}
                   onChange={(e) => setMappedName(e.target.value)}
-                  className="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium"
+                  className="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600 font-medium"
                 />
               </div>
 
@@ -864,7 +864,7 @@ export default function AdminDashboard({ initialSubTab = 'requests' }) {
                   placeholder="name@galgotias.edu"
                   value={mappedEmail}
                   onChange={(e) => setMappedEmail(e.target.value)}
-                  className="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium"
+                  className="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600 font-medium"
                 />
               </div>
 
@@ -878,7 +878,7 @@ export default function AdminDashboard({ initialSubTab = 'requests' }) {
                   placeholder="+91 9876543210 (Used for Authentication)"
                   value={mappedPhone}
                   onChange={(e) => setMappedPhone(e.target.value)}
-                  className="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium"
+                  className="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600 font-medium"
                 />
                 <span className="text-[10px] text-slate-400 block mt-0.5">
                   User can sign in with this mobile number or their institutional email.
@@ -892,7 +892,7 @@ export default function AdminDashboard({ initialSubTab = 'requests' }) {
                 <select
                   value={mappedRole}
                   onChange={(e) => setMappedRole(e.target.value)}
-                  className="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium"
+                  className="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600 font-medium"
                 >
                   <option value="CLUB_HEAD">Club Head (Submit Requests)</option>
                   <option value="ADMIN">Administrative Head (Full Control)</option>
@@ -909,7 +909,7 @@ export default function AdminDashboard({ initialSubTab = 'requests' }) {
                   required
                   value={tempPassword}
                   onChange={(e) => setTempPassword(e.target.value)}
-                  className="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium"
+                  className="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600 font-medium"
                 />
                 <span className="text-[10px] text-slate-400 block mt-0.5">
                   Prompted to change on first login.
@@ -926,7 +926,7 @@ export default function AdminDashboard({ initialSubTab = 'requests' }) {
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-md"
+                  className="px-4 py-2 text-xs font-bold text-white bg-gradient-to-r from-red-700 to-amber-600 hover:from-red-800 hover:to-amber-700 rounded-lg shadow-md"
                 >
                   Save & Provision Account
                 </button>
@@ -1037,7 +1037,7 @@ export default function AdminDashboard({ initialSubTab = 'requests' }) {
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-md"
+                  className="px-4 py-2 font-bold text-white bg-gradient-to-r from-red-700 to-amber-600 hover:from-red-800 hover:to-amber-700 rounded-lg shadow-md"
                 >
                   Publish to Schedule
                 </button>

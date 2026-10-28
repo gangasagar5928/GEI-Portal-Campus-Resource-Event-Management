@@ -54,10 +54,10 @@ export default function PublicSchedule({ onOpenRequest }) {
     <div className="space-y-6">
       
       {/* Hero Banner */}
-      <div className="bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 rounded-2xl p-6 sm:p-8 text-white shadow-xl border border-blue-800/50">
+      <div className="bg-gradient-to-r from-red-950 via-stone-900 to-slate-950 rounded-2xl p-6 sm:p-8 text-white shadow-xl border border-red-900/60">
         <div className="max-w-3xl">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30 text-xs font-semibold mb-3">
-            <ShieldCheck className="w-3.5 h-3.5 text-blue-400" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 text-xs font-semibold mb-3">
+            <ShieldCheck className="w-3.5 h-3.5 text-amber-400" />
             Official Confirmed Bookings
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
@@ -69,13 +69,13 @@ export default function PublicSchedule({ onOpenRequest }) {
         </div>
 
         {/* Quick Venue Badges */}
-        <div className="mt-6 flex flex-wrap gap-2 pt-4 border-t border-blue-800/60">
+        <div className="mt-6 flex flex-wrap gap-2 pt-4 border-t border-red-900/60">
           <button
             onClick={() => setSelectedVenue('ALL')}
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
               selectedVenue === 'ALL'
-                ? 'bg-white text-slate-900 shadow-md'
-                : 'bg-blue-950/70 text-blue-200 hover:bg-blue-800/60 border border-blue-700/50'
+                ? 'bg-amber-400 text-slate-950 shadow-md font-bold'
+                : 'bg-red-950/70 text-amber-200 hover:bg-red-900/60 border border-red-800/60'
             }`}
           >
             All Venues ({schedule.length})
@@ -88,8 +88,8 @@ export default function PublicSchedule({ onOpenRequest }) {
                 onClick={() => setSelectedVenue(venue.name)}
                 className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                   selectedVenue === venue.name
-                    ? 'bg-white text-slate-900 shadow-md'
-                    : 'bg-blue-950/70 text-blue-200 hover:bg-blue-800/60 border border-blue-700/50'
+                    ? 'bg-amber-400 text-slate-950 shadow-md font-bold'
+                    : 'bg-red-950/70 text-amber-200 hover:bg-red-900/60 border border-red-800/60'
                 }`}
               >
                 {venue.name} ({count})
@@ -111,7 +111,7 @@ export default function PublicSchedule({ onOpenRequest }) {
             aria-label="Search scheduled events by title, club or keyword"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 text-sm bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white text-slate-800"
+            className="w-full pl-10 pr-4 py-2 text-sm bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:bg-white text-slate-800"
           />
         </div>
 
@@ -124,7 +124,7 @@ export default function PublicSchedule({ onOpenRequest }) {
               aria-label="Filter events by date"
               value={dateFilter}
               onChange={(e) => setDateFilter(e.target.value)}
-              className="py-2 px-3 text-xs sm:text-sm bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800 font-medium"
+              className="py-2 px-3 text-xs sm:text-sm bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 text-slate-800 font-medium"
             />
           </div>
 
@@ -156,7 +156,7 @@ export default function PublicSchedule({ onOpenRequest }) {
                 setDateFilter('');
                 setSelectedVenue('ALL');
               }}
-              className="mt-4 px-4 py-2 text-xs font-semibold text-blue-700 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors"
+              className="mt-4 px-4 py-2 text-xs font-semibold text-red-700 bg-red-50 hover:bg-red-100 rounded-lg transition-colors"
             >
               Reset Filters
             </button>
@@ -168,12 +168,12 @@ export default function PublicSchedule({ onOpenRequest }) {
             <div
               key={event.eventId}
               onClick={() => setSelectedEvent(event)}
-              className="group bg-white rounded-xl border border-slate-200 p-5 shadow-sm hover:shadow-md hover:border-blue-300 transition-all cursor-pointer flex flex-col justify-between"
+              className="group bg-white rounded-xl border border-slate-200 p-5 shadow-sm hover:shadow-md hover:border-red-400 transition-all cursor-pointer flex flex-col justify-between"
             >
               <div>
                 {/* Header tags */}
                 <div className="flex items-center justify-between gap-2 mb-3">
-                  <span className="px-2.5 py-1 rounded-md text-[11px] font-bold bg-blue-50 text-blue-700 border border-blue-200/60">
+                  <span className="px-2.5 py-1 rounded-md text-[11px] font-bold bg-red-50 text-red-800 border border-red-200/60">
                     {event.clubName}
                   </span>
                   <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200/60">
@@ -183,7 +183,7 @@ export default function PublicSchedule({ onOpenRequest }) {
                 </div>
 
                 {/* Event Title */}
-                <h2 className="text-base font-bold text-slate-900 group-hover:text-blue-600 transition-colors line-clamp-2">
+                <h2 className="text-base font-bold text-slate-900 group-hover:text-red-700 transition-colors line-clamp-2">
                   {event.title}
                 </h2>
 
@@ -196,13 +196,13 @@ export default function PublicSchedule({ onOpenRequest }) {
               {/* Time and Venue Footer */}
               <div className="mt-5 pt-4 border-t border-slate-100 space-y-2 text-xs text-slate-500 font-medium">
                 <div className="flex items-center gap-2 text-slate-700">
-                  <MapPin className="w-3.5 h-3.5 text-blue-600 shrink-0" />
+                  <MapPin className="w-3.5 h-3.5 text-red-600 shrink-0" />
                   <span className="font-semibold truncate">{event.venue}</span>
                 </div>
 
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <CalendarIcon className="w-3.5 h-3.5 text-indigo-500 shrink-0" />
+                    <CalendarIcon className="w-3.5 h-3.5 text-amber-600 shrink-0" />
                     <span>{event.date}</span>
                   </div>
                   <div className="flex items-center gap-1.5 text-slate-700">
@@ -230,7 +230,7 @@ export default function PublicSchedule({ onOpenRequest }) {
             
             <div className="flex items-start justify-between gap-3">
               <div>
-                <span className="px-2.5 py-1 rounded-md text-xs font-bold bg-blue-100 text-blue-800">
+                <span className="px-2.5 py-1 rounded-md text-xs font-bold bg-red-100 text-red-800">
                   {selectedEvent.clubName}
                 </span>
                 <h2 className="mt-2 text-xl font-extrabold text-slate-900">
@@ -247,7 +247,7 @@ export default function PublicSchedule({ onOpenRequest }) {
 
             <div className="mt-5 space-y-3.5 bg-slate-50 p-4 rounded-xl text-sm border border-slate-200/60">
               <div className="flex items-center gap-3">
-                <MapPin className="w-4 h-4 text-blue-600 shrink-0" />
+                <MapPin className="w-4 h-4 text-red-600 shrink-0" />
                 <div>
                   <span className="text-xs text-slate-400 block">Venue</span>
                   <span className="font-semibold text-slate-800">{selectedEvent.venue}</span>
@@ -255,7 +255,7 @@ export default function PublicSchedule({ onOpenRequest }) {
               </div>
 
               <div className="flex items-center gap-3">
-                <CalendarIcon className="w-4 h-4 text-indigo-600 shrink-0" />
+                <CalendarIcon className="w-4 h-4 text-amber-600 shrink-0" />
                 <div>
                   <span className="text-xs text-slate-400 block">Date</span>
                   <span className="font-semibold text-slate-800">{selectedEvent.date}</span>
@@ -292,7 +292,7 @@ export default function PublicSchedule({ onOpenRequest }) {
 
             {/* Privacy notice compliant with PRD section 7 */}
             <div className="mt-5 pt-4 border-t border-slate-100 flex items-center gap-2 text-[11px] text-slate-400">
-              <Info className="w-3.5 h-3.5 text-blue-500 shrink-0" />
+              <Info className="w-3.5 h-3.5 text-amber-500 shrink-0" />
               <span>Internal notes, requisition equipment, and approver contact details are shielded.</span>
             </div>
 

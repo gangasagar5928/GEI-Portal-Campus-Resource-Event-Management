@@ -108,7 +108,7 @@ export default function CeoDashboard() {
                       <div className="flex items-center gap-2">
                         <span className="text-xs font-bold text-slate-400">{req.requestId}</span>
                         <span className="text-slate-300">•</span>
-                        <span className="px-2 py-0.5 rounded text-xs font-bold bg-blue-50 text-blue-700">
+                        <span className="px-2 py-0.5 rounded text-xs font-bold bg-red-50 text-red-800">
                           {req.clubName}
                         </span>
                         <span className="text-slate-300">•</span>
@@ -130,7 +130,7 @@ export default function CeoDashboard() {
                       {/* Equipment items */}
                       {req.equipmentRequirements?.length > 0 && (
                         <div className="flex items-center gap-1.5 pt-1 text-xs text-slate-600">
-                          <Package className="w-3.5 h-3.5 text-blue-600" />
+                          <Package className="w-3.5 h-3.5 text-amber-600" />
                           <span>Equipment: </span>
                           <span className="font-semibold text-slate-800">
                             {req.equipmentRequirements.map(e => `${e.name} (${e.qty})`).join(', ')}

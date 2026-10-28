@@ -29,7 +29,7 @@ export default function RequestDetailsModal({ request, onClose, onActionClick, c
       case 'Forwarded for Approval':
         return <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-purple-100 text-purple-800 flex items-center gap-1.5"><SendHorizontal className="w-3.5 h-3.5" /> Forwarded to CEO</span>;
       default:
-        return <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-blue-100 text-blue-800 flex items-center gap-1.5"><Clock className="w-3.5 h-3.5" /> Under Review</span>;
+        return <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-900 flex items-center gap-1.5"><Clock className="w-3.5 h-3.5" /> Under Review</span>;
     }
   };
 
@@ -45,7 +45,7 @@ export default function RequestDetailsModal({ request, onClose, onActionClick, c
                 {request.requestId}
               </span>
               <span className="text-slate-300">•</span>
-              <span className="text-xs font-bold px-2 py-0.5 rounded bg-blue-50 text-blue-700">
+              <span className="text-xs font-bold px-2 py-0.5 rounded bg-red-50 text-red-800">
                 {request.clubName}
               </span>
             </div>
@@ -125,11 +125,11 @@ export default function RequestDetailsModal({ request, onClose, onActionClick, c
           )}
 
           {request.clarificationResponse && (
-            <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 text-xs">
-              <div className="font-bold text-blue-900 mb-1">
+            <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 text-xs">
+              <div className="font-bold text-amber-900 mb-1">
                 Club Head Response:
               </div>
-              <p className="text-blue-800">{request.clarificationResponse}</p>
+              <p className="text-amber-800">{request.clarificationResponse}</p>
             </div>
           )}
 
@@ -137,7 +137,7 @@ export default function RequestDetailsModal({ request, onClose, onActionClick, c
           {request.equipmentRequirements && request.equipmentRequirements.length > 0 && (
             <div>
               <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5 flex items-center gap-1.5">
-                <Package className="w-3.5 h-3.5 text-blue-600" />
+                <Package className="w-3.5 h-3.5 text-amber-600" />
                 Requested Equipment & AV Resources
               </h4>
               <div className="flex flex-wrap gap-2">
@@ -147,7 +147,7 @@ export default function RequestDetailsModal({ request, onClose, onActionClick, c
                     className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-slate-100 text-slate-800 font-semibold text-xs border border-slate-200"
                   >
                     <span>{item.name}</span>
-                    <span className="px-1.5 py-0.2 rounded bg-white text-blue-600 text-[11px] font-bold border border-slate-200">
+                    <span className="px-1.5 py-0.2 rounded bg-white text-red-700 text-[11px] font-bold border border-slate-200">
                       ×{item.qty}
                     </span>
                   </span>
@@ -178,7 +178,7 @@ export default function RequestDetailsModal({ request, onClose, onActionClick, c
             <div className="space-y-3 relative before:absolute before:inset-0 before:left-2 before:w-0.5 before:bg-slate-200 pl-6">
               {request.history?.map((step, idx) => (
                 <div key={step.id || idx} className="relative text-xs">
-                  <div className="absolute -left-6 top-1 w-2.5 h-2.5 rounded-full bg-blue-600 ring-4 ring-white" />
+                  <div className="absolute -left-6 top-1 w-2.5 h-2.5 rounded-full bg-red-600 ring-4 ring-white" />
                   <div className="flex items-center justify-between">
                     <span className="font-bold text-slate-900">
                       {step.action?.replace(/_/g, ' ')}
@@ -207,7 +207,7 @@ export default function RequestDetailsModal({ request, onClose, onActionClick, c
           {canTakeAction && onActionClick && (
             <button
               onClick={() => onActionClick(request)}
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-bold shadow-md transition-colors"
+              className="px-4 py-2 bg-gradient-to-r from-red-700 to-amber-600 hover:from-red-800 hover:to-amber-700 text-white rounded-lg text-xs font-bold shadow-md shadow-red-700/25 transition-colors"
             >
               Take Approver Action
             </button>

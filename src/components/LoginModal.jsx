@@ -160,7 +160,7 @@ export default function LoginModal({ isOpen, onClose }) {
                   placeholder="e.g. Master Administrator"
                   value={setupName}
                   onChange={(e) => setSetupName(e.target.value)}
-                  className="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium"
+                  className="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600 font-medium"
                 />
               </div>
 
@@ -174,7 +174,7 @@ export default function LoginModal({ isOpen, onClose }) {
                   placeholder="admin@galgotias.edu"
                   value={setupEmail}
                   onChange={(e) => setSetupEmail(e.target.value)}
-                  className="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium"
+                  className="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600 font-medium"
                 />
               </div>
 
@@ -188,7 +188,7 @@ export default function LoginModal({ isOpen, onClose }) {
                   placeholder="+91 9876543210"
                   value={setupPhone}
                   onChange={(e) => setSetupPhone(e.target.value)}
-                  className="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium"
+                  className="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600 font-medium"
                 />
               </div>
 
@@ -203,7 +203,7 @@ export default function LoginModal({ isOpen, onClose }) {
                   placeholder="••••••••"
                   value={setupPassword}
                   onChange={(e) => setSetupPassword(e.target.value)}
-                  className="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium"
+                  className="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600 font-medium"
                 />
               </div>
 
@@ -218,7 +218,7 @@ export default function LoginModal({ isOpen, onClose }) {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow-md transition-all flex items-center gap-1.5"
+                  className="px-4 py-2 bg-red-700 hover:bg-red-800 text-white rounded-xl text-xs font-bold shadow-md transition-all flex items-center gap-1.5"
                 >
                   <UserPlus className="w-3.5 h-3.5" />
                   {loading ? 'Creating...' : 'Create Account'}
@@ -239,7 +239,7 @@ export default function LoginModal({ isOpen, onClose }) {
                     placeholder="email@galgotias.edu or Phone"
                     value={identifier}
                     onChange={(e) => setIdentifier(e.target.value)}
-                    className="w-full pl-9 pr-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium"
+                    className="w-full pl-9 pr-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600 font-medium"
                   />
                 </div>
               </div>
@@ -252,7 +252,7 @@ export default function LoginModal({ isOpen, onClose }) {
                   <button
                     type="button"
                     onClick={handleForgotPassword}
-                    className="text-[11px] text-blue-600 hover:text-blue-800 font-semibold"
+                    className="text-[11px] text-red-700 hover:text-red-900 font-semibold"
                   >
                     Forgot Password?
                   </button>
@@ -265,7 +265,7 @@ export default function LoginModal({ isOpen, onClose }) {
                     placeholder="••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full pl-9 pr-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium"
+                    className="w-full pl-9 pr-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600 font-medium"
                   />
                 </div>
               </div>
@@ -273,7 +273,7 @@ export default function LoginModal({ isOpen, onClose }) {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow-md shadow-blue-600/30 transition-all flex items-center justify-center gap-2 disabled:bg-slate-400"
+                className="w-full py-2.5 bg-gradient-to-r from-red-700 to-amber-600 hover:from-red-800 hover:to-amber-700 text-white rounded-xl text-xs font-bold shadow-md shadow-red-700/30 transition-all flex items-center justify-center gap-2 disabled:bg-slate-400"
               >
                 <LogIn className="w-3.5 h-3.5" />
                 {loading ? 'Authenticating...' : 'Sign In to Portal'}
@@ -330,7 +330,7 @@ export default function LoginModal({ isOpen, onClose }) {
                   <button
                     type="button"
                     onClick={() => setIsSetupMode(true)}
-                    className="text-xs text-blue-600 hover:text-blue-800 font-semibold"
+                    className="text-xs text-red-700 hover:text-red-800 font-semibold"
                   >
                     Setup Initial Master Administrator
                   </button>

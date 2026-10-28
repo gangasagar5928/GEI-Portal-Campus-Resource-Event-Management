@@ -38,7 +38,7 @@ export default function SyncIndicator({ compact = false }) {
           syncStatus === 'live'
             ? 'bg-emerald-950/40 border-emerald-500/40 text-emerald-300 hover:bg-emerald-900/50'
             : syncStatus === 'syncing' || isRefreshing
-            ? 'bg-blue-950/40 border-blue-500/40 text-blue-300 hover:bg-blue-900/50'
+            ? 'bg-amber-950/40 border-amber-500/40 text-amber-300 hover:bg-amber-900/50'
             : syncStatus === 'offline'
             ? 'bg-amber-950/40 border-amber-500/40 text-amber-300 hover:bg-amber-900/50'
             : 'bg-slate-800 border-slate-700 text-slate-300'
@@ -55,7 +55,7 @@ export default function SyncIndicator({ compact = false }) {
           </>
         ) : syncStatus === 'syncing' || isRefreshing ? (
           <>
-            <RefreshCw className="w-3 h-3 animate-spin text-blue-400" />
+            <RefreshCw className="w-3 h-3 animate-spin text-amber-400" />
             <span className={compact ? 'hidden sm:inline text-[11px]' : 'text-[11px]'}>Syncing</span>
           </>
         ) : (
@@ -74,7 +74,7 @@ export default function SyncIndicator({ compact = false }) {
         >
           <div className="flex items-center justify-between pb-2 border-b border-slate-800">
             <span className="font-bold text-white flex items-center gap-1.5">
-              <Cloud className="w-3.5 h-3.5 text-blue-400" />
+              <Cloud className="w-3.5 h-3.5 text-amber-400" />
               Live Sync Engine
             </span>
             <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${
@@ -114,7 +114,7 @@ export default function SyncIndicator({ compact = false }) {
             <button
               onClick={handleManualSync}
               disabled={isRefreshing}
-              className="w-full py-1.5 px-2 bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 shadow-sm transition-all"
+              className="w-full py-1.5 px-2 bg-red-700 hover:bg-red-600 disabled:opacity-50 text-white rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 shadow-sm transition-all"
             >
               <RefreshCw className={`w-3 h-3 ${isRefreshing ? 'animate-spin' : ''}`} />
               <span>Sync Now</span>
