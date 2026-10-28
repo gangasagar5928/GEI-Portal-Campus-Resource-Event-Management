@@ -148,8 +148,8 @@ function AppContent() {
 
       {/* Mandatory Password Change Dialog on First Login (PRD Section 4) */}
       {showPasswordChangeModal && (
-        <div className="fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 sm:p-7 shadow-2xl border border-slate-100">
+        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+          <div className="bg-white rounded-2xl max-w-md w-full my-auto max-h-[90vh] overflow-y-auto p-5 sm:p-6 shadow-2xl border border-slate-100">
             <div className="w-10 h-10 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center mb-3">
               <Lock className="w-5 h-5" />
             </div>

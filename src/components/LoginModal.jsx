@@ -86,67 +86,67 @@ export default function LoginModal({ isOpen, onClose }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-xs flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-slate-100 relative animate-in fade-in zoom-in-95 duration-150">
+    <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+      <div className="bg-white rounded-2xl max-w-md w-full my-auto max-h-[90vh] overflow-y-auto p-5 sm:p-6 shadow-2xl border border-slate-100 relative animate-in fade-in zoom-in-95 duration-150">
         
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition-colors"
+          className="absolute top-3 right-3 sm:top-4 sm:right-4 w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition-colors z-10"
         >
           <X className="w-4 h-4" />
         </button>
 
         {/* Branding */}
-        <div className="text-center mb-6">
-          <div className="w-16 h-16 rounded-2xl bg-white p-1 flex items-center justify-center mx-auto mb-3 shadow-lg border border-slate-200/80">
+        <div className="text-center mb-3 sm:mb-4">
+          <div className="w-12 h-12 rounded-xl bg-white p-0.5 flex items-center justify-center mx-auto mb-2 shadow-md border border-slate-200/80">
             <img 
               src="./logo.webp" 
               alt="GEI Portal Logo" 
-              width="64" 
-              height="64" 
-              className="w-full h-full object-cover rounded-xl" 
+              width="48" 
+              height="48" 
+              className="w-full h-full object-cover rounded-lg" 
               loading="lazy" 
             />
           </div>
-          <h2 className="text-xl font-black text-slate-900">
+          <h2 className="text-lg font-black text-slate-900 leading-tight">
             {isSetupMode ? 'System Administrator Setup' : 'Institutional Sign In'}
           </h2>
-          <p className="text-xs text-slate-500 mt-1">
+          <p className="text-[11px] text-slate-500 mt-0.5">
             Galgotias Educational Institutions • Student Council Portal
           </p>
         </div>
 
         {/* First-time setup banner if no users exist */}
         {users.length === 0 && !isSetupMode && (
-          <div className="mb-4 p-3 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-900 flex flex-col gap-2">
-            <span className="font-bold">Initial System Bootstrap:</span>
-            <span>No user accounts currently exist. Create your Master Administrator account to begin provisioning.</span>
+          <div className="mb-3 p-2.5 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-900 flex flex-col gap-1.5">
+            <span className="font-bold text-[11px]">Initial System Bootstrap:</span>
+            <span className="text-[11px] leading-snug">No user accounts currently exist. Create your Master Administrator account to begin provisioning.</span>
             <button
               type="button"
               onClick={() => setIsSetupMode(true)}
-              className="mt-1 px-3 py-1.5 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-lg text-xs self-start flex items-center gap-1.5 transition-colors"
+              className="mt-0.5 px-2.5 py-1 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-lg text-[11px] self-start flex items-center gap-1.5 transition-colors"
             >
-              <UserPlus className="w-3.5 h-3.5" />
+              <UserPlus className="w-3 h-3" />
               Initialize Master Admin Account
             </button>
           </div>
         )}
 
         {error && (
-          <div className="mb-4 p-3 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-800 flex items-center gap-2">
+          <div className="mb-3 p-2.5 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-800 flex items-center gap-2">
             <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
             <span>{error}</span>
           </div>
         )}
 
         {resetMessage && (
-          <div className="mb-4 p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-xs text-emerald-800 flex items-center gap-2">
+          <div className="mb-3 p-2.5 bg-emerald-50 border border-emerald-200 rounded-xl text-xs text-emerald-800 flex items-center gap-2">
             <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
             <span>{resetMessage}</span>
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-3">
           
           {isSetupMode ? (
             <>
@@ -280,10 +280,10 @@ export default function LoginModal({ isOpen, onClose }) {
               </button>
 
               {/* Demo Accounts Quick-Fill Section */}
-              <div className="mt-5 pt-4 border-t border-slate-100">
-                <div className="text-[11px] font-bold text-slate-600 uppercase tracking-wider mb-2 flex items-center justify-between">
+              <div className="mt-3.5 pt-3 border-t border-slate-100">
+                <div className="text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1.5 flex items-center justify-between">
                   <span>Demo Evaluation Accounts</span>
-                  <span className="text-[10px] text-emerald-700 font-bold bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200">1-Click Fill</span>
+                  <span className="text-[9px] text-emerald-700 font-bold bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200">1-Click Fill</span>
                 </div>
                 <div className="grid grid-cols-3 gap-1.5 text-left">
                   <button
@@ -292,7 +292,7 @@ export default function LoginModal({ isOpen, onClose }) {
                       setIdentifier('admin@gei.edu');
                       setPassword('Galgotias@2026');
                     }}
-                    className="p-2 rounded-lg bg-slate-50 hover:bg-amber-50 border border-slate-200 hover:border-amber-300 transition-colors text-left"
+                    className="p-1.5 rounded-lg bg-slate-50 hover:bg-amber-50 border border-slate-200 hover:border-amber-300 transition-colors text-left"
                   >
                     <span className="block font-bold text-[11px] text-amber-800">Admin</span>
                     <span className="block text-[9px] text-slate-600 truncate">admin@gei.edu</span>
@@ -303,7 +303,7 @@ export default function LoginModal({ isOpen, onClose }) {
                       setIdentifier('club@gei.edu');
                       setPassword('Galgotias@2026');
                     }}
-                    className="p-2 rounded-lg bg-slate-50 hover:bg-emerald-50 border border-slate-200 hover:border-emerald-300 transition-colors text-left"
+                    className="p-1.5 rounded-lg bg-slate-50 hover:bg-emerald-50 border border-slate-200 hover:border-emerald-300 transition-colors text-left"
                   >
                     <span className="block font-bold text-[11px] text-emerald-800">Club Head</span>
                     <span className="block text-[9px] text-slate-600 truncate">club@gei.edu</span>
@@ -314,13 +314,13 @@ export default function LoginModal({ isOpen, onClose }) {
                       setIdentifier('ceo@gei.edu');
                       setPassword('Galgotias@2026');
                     }}
-                    className="p-2 rounded-lg bg-slate-50 hover:bg-rose-50 border border-slate-200 hover:border-red-300 transition-colors text-left"
+                    className="p-1.5 rounded-lg bg-slate-50 hover:bg-rose-50 border border-slate-200 hover:border-red-300 transition-colors text-left"
                   >
                     <span className="block font-bold text-[11px] text-red-800">CEO / Lead</span>
                     <span className="block text-[9px] text-slate-600 truncate">ceo@gei.edu</span>
                   </button>
                 </div>
-                <p className="text-[10px] text-slate-600 mt-2 text-center">
+                <p className="text-[10px] text-slate-600 mt-1.5 text-center">
                   Password: <code className="text-slate-800 font-mono font-bold bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200">Galgotias@2026</code>
                 </p>
               </div>

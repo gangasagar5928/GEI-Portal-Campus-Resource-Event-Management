@@ -186,8 +186,8 @@ export default function CeoDashboard() {
 
       {/* Decision Modal */}
       {decisionModal && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100">
+        <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+          <div className="bg-white rounded-2xl max-w-lg w-full my-auto max-h-[90vh] overflow-y-auto p-5 sm:p-6 shadow-2xl border border-slate-100">
             <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
               <ShieldCheck className="w-5 h-5 text-amber-600" />
               Executive Decision: {decisionModal.type}

@@ -1,6 +1,6 @@
 // GEI Campus Resource & Event Management System - Service Worker
-// Cache Version - v3 Red-Gold Theme Update
-const CACHE_NAME = 'gei-portal-pwa-v3';
+// Cache Version - v4 Layout & Overflow Fixes
+const CACHE_NAME = 'gei-portal-pwa-v4';
 
 // Core shell assets to precache for offline support
 const PRECACHE_ASSETS = [

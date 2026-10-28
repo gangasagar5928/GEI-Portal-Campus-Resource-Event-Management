@@ -776,8 +776,8 @@ export default function AdminDashboard({ initialSubTab = 'requests' }) {
       {/* APPROVER ACTION DIALOG */}
       {/* ======================================================== */}
       {actionDialog && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100">
+        <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+          <div className="bg-white rounded-2xl max-w-lg w-full my-auto max-h-[90vh] overflow-y-auto p-5 sm:p-6 shadow-2xl border border-slate-100">
             <h3 className="text-lg font-bold text-slate-900">
               Confirm Approver Action: {actionDialog.type}
             </h3>
@@ -827,8 +827,8 @@ export default function AdminDashboard({ initialSubTab = 'requests' }) {
       {/* INSTITUTIONAL ACCOUNT PROVISIONING MODAL */}
       {/* ======================================================== */}
       {mappingModal && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-100 animate-in fade-in zoom-in-95 duration-150">
+        <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+          <div className="bg-white rounded-2xl max-w-md w-full my-auto max-h-[90vh] overflow-y-auto p-5 sm:p-6 shadow-2xl border border-slate-100 animate-in fade-in zoom-in-95 duration-150">
             <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
               <ShieldCheck className="w-5 h-5 text-red-600" />
               Provision Institutional Account
@@ -940,8 +940,8 @@ export default function AdminDashboard({ initialSubTab = 'requests' }) {
       {/* DIRECT SCHEDULE EVENT MODAL */}
       {/* ======================================================== */}
       {showAddEventModal && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100">
+        <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+          <div className="bg-white rounded-2xl max-w-lg w-full my-auto max-h-[90vh] overflow-y-auto p-5 sm:p-6 shadow-2xl border border-slate-100">
             <h3 className="text-lg font-bold text-slate-900">
               Direct Institutional Auditorium Booking
             </h3>
@@ -1051,8 +1051,8 @@ export default function AdminDashboard({ initialSubTab = 'requests' }) {
       {/* ANNUAL ROLLOVER MODAL */}
       {/* ======================================================== */}
       {showRolloverModal && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-100">
+        <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+          <div className="bg-white rounded-2xl max-w-md w-full my-auto max-h-[90vh] overflow-y-auto p-5 sm:p-6 shadow-2xl border border-slate-100">
             <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
               <RotateCcw className="w-5 h-5 text-red-600" />
               Annual Roster Rollover
