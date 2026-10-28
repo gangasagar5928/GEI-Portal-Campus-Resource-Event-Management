@@ -45,7 +45,8 @@ export function DataProvider({ children }) {
   const [equipment, setEquipment] = useState(() => loadStored('equipment', INITIAL_EQUIPMENT));
   const [schedule, setSchedule] = useState(() => {
     const stored = loadStored('schedule', INITIAL_SCHEDULE);
-    return stored && stored.length > 0 ? stored : INITIAL_SCHEDULE;
+    const base = stored && stored.length > 0 ? stored : INITIAL_SCHEDULE;
+    return base.map(s => ({ visibility: 'public', ...s }));
   });
   const [requests, setRequests] = useState(() => {
     const stored = loadStored('requests', INITIAL_REQUESTS);
@@ -128,19 +129,19 @@ export function DataProvider({ children }) {
       unsubs.push(
         onSnapshot(collection(db, 'schedule'), (snapshot) => {
           if (!snapshot.empty) {
-            const list = snapshot.docs.map(d => ({ ...d.data(), eventId: d.id }));
+            const list = snapshot.docs.map(d => ({ visibility: 'public', ...d.data(), eventId: d.id }));
             const merged = [...list];
             INITIAL_SCHEDULE.forEach(initSch => {
               if (!merged.some(s => s.eventId === initSch.eventId)) {
-                merged.push(initSch);
+                merged.push({ visibility: 'public', ...initSch });
               }
             });
-            setSchedule(merged);
+            setSchedule(merged.map(s => ({ visibility: 'public', ...s })));
           } else {
             INITIAL_SCHEDULE.forEach(s => {
-              setDoc(doc(db, 'schedule', s.eventId), s).catch(console.warn);
+              setDoc(doc(db, 'schedule', s.eventId), { visibility: 'public', ...s }).catch(console.warn);
             });
-            setSchedule(INITIAL_SCHEDULE);
+            setSchedule(INITIAL_SCHEDULE.map(s => ({ visibility: 'public', ...s })));
           }
           setSyncStatus(navigator.onLine ? 'live' : 'offline');
           setLastSyncTime(new Date().toISOString());

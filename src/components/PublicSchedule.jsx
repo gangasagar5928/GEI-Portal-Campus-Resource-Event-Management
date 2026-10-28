@@ -23,8 +23,8 @@ export default function PublicSchedule({ onOpenRequest }) {
   // Filter confirmed public events
   const filteredEvents = useMemo(() => {
     return schedule.filter(event => {
-      // Must be public visibility
-      if (event.visibility !== 'public') return false;
+      // Must not be explicitly private
+      if (event.visibility === 'private') return false;
 
       // Venue filter
       if (selectedVenue !== 'ALL' && event.venue !== selectedVenue) return false;
@@ -78,10 +78,10 @@ export default function PublicSchedule({ onOpenRequest }) {
                 : 'bg-red-950/70 text-amber-200 hover:bg-red-900/60 border border-red-800/60'
             }`}
           >
-            All Venues ({schedule.length})
+            All Venues ({schedule.filter(s => s.visibility !== 'private').length})
           </button>
           {VENUES.map(venue => {
-            const count = schedule.filter(s => s.venue === venue.name).length;
+            const count = schedule.filter(s => s.venue === venue.name && s.visibility !== 'private').length;
             return (
               <button
                 key={venue.id}

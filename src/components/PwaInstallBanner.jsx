@@ -7,8 +7,22 @@ export default function PwaInstallBanner() {
   const [isDismissed, setIsDismissed] = useState(false);
   const [isIos, setIsIos] = useState(false);
   const [installedSuccessfully, setInstalledSuccessfully] = useState(false);
+  const [isMobile, setIsMobile] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    const isSmallScreen = window.innerWidth < 768;
+    const isMobileDevice = /android|iphone|ipad|ipod|mobile/i.test(navigator.userAgent);
+    return isSmallScreen || isMobileDevice;
+  });
 
   useEffect(() => {
+    const checkMobile = () => {
+      const isSmallScreen = window.innerWidth < 768;
+      const isMobileDevice = /android|iphone|ipad|ipod|mobile/i.test(navigator.userAgent);
+      setIsMobile(isSmallScreen || isMobileDevice);
+    };
+
+    window.addEventListener('resize', checkMobile);
+
     // Check if running in standalone mode (already installed)
     const checkStandalone = window.matchMedia('(display-mode: standalone)').matches || 
       window.navigator.standalone === true;
@@ -37,6 +51,7 @@ export default function PwaInstallBanner() {
     window.addEventListener('appinstalled', handleAppInstalled);
 
     return () => {
+      window.removeEventListener('resize', checkMobile);
       window.removeEventListener('beforeinstallprompt', handleBeforeInstall);
       window.removeEventListener('appinstalled', handleAppInstalled);
     };
@@ -53,10 +68,11 @@ export default function PwaInstallBanner() {
     setDeferredPrompt(null);
   };
 
-  if (isStandalone || isDismissed) {
-    if (installedSuccessfully) {
+  // Only display on mobile devices and screens < 768px
+  if (!isMobile || isStandalone || isDismissed) {
+    if (installedSuccessfully && isMobile) {
       return (
-        <div className="bg-emerald-600 text-white px-4 py-2 text-xs font-semibold text-center flex items-center justify-center gap-2">
+        <div className="md:hidden bg-emerald-600 text-white px-4 py-2 text-xs font-semibold text-center flex items-center justify-center gap-2">
           <CheckCircle2 className="w-4 h-4" />
           GEI Portal app installed successfully to your device!
         </div>
@@ -68,7 +84,7 @@ export default function PwaInstallBanner() {
   // If prompt is available (Android, Chrome, Edge)
   if (deferredPrompt) {
     return (
-      <aside aria-label="Install GEI Portal Mobile App" className="bg-gradient-to-r from-[#2a0508] via-[#1a0507] to-[#120305] border-b border-amber-500/30 text-white px-4 py-2.5 shadow-lg relative z-40">
+      <aside aria-label="Install GEI Portal Mobile App" className="md:hidden bg-gradient-to-r from-[#2a0508] via-[#1a0507] to-[#120305] border-b border-amber-500/30 text-white px-4 py-2.5 shadow-lg relative z-40">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-white p-0.5 shadow-md shrink-0">
@@ -116,7 +132,7 @@ export default function PwaInstallBanner() {
   // iOS Safari specific prompt
   if (isIos && !isStandalone) {
     return (
-      <aside aria-label="Install GEI Portal on iOS" className="bg-gradient-to-r from-[#2a0508] via-[#1a0507] to-[#120305] border-b border-red-800/40 text-white px-4 py-2 shadow-sm text-xs relative z-40">
+      <aside aria-label="Install GEI Portal on iOS" className="md:hidden bg-gradient-to-r from-[#2a0508] via-[#1a0507] to-[#120305] border-b border-red-800/40 text-white px-4 py-2 shadow-sm text-xs relative z-40">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
           <div className="flex items-center gap-2 text-[11px] text-slate-300">
             <Smartphone className="w-3.5 h-3.5 text-amber-400 shrink-0" />

@@ -111,6 +111,7 @@ export const INITIAL_SCHEDULE = [
     endTime: '17:00',
     expectedAttendance: 850,
     category: 'special_event',
+    visibility: 'public',
     status: 'Confirmed'
   },
   {
@@ -126,6 +127,7 @@ export const INITIAL_SCHEDULE = [
     endTime: '18:30',
     expectedAttendance: 350,
     category: 'auditorium',
+    visibility: 'public',
     status: 'Confirmed'
   },
   {
@@ -141,6 +143,7 @@ export const INITIAL_SCHEDULE = [
     endTime: '20:00',
     expectedAttendance: 1200,
     category: 'venue_equipment',
+    visibility: 'public',
     status: 'Confirmed'
   },
   {
@@ -156,6 +159,7 @@ export const INITIAL_SCHEDULE = [
     endTime: '15:00',
     expectedAttendance: 180,
     category: 'venue_equipment',
+    visibility: 'public',
     status: 'Confirmed'
   }
 ];
