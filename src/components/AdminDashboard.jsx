@@ -38,7 +38,6 @@ export default function AdminDashboard({ initialSubTab = 'requests' }) {
     approveRequest, 
     rejectRequest, 
     requestClarification, 
-    forwardForApproval, 
     addScheduleEvent,
     deleteScheduleEvent,
     mapUserAccount, 
@@ -54,7 +53,7 @@ export default function AdminDashboard({ initialSubTab = 'requests' }) {
   const [selectedRequestForModal, setSelectedRequestForModal] = useState(null);
 
   // Approver Action Dialog State
-  const [actionDialog, setActionDialog] = useState(null); // { type: 'APPROVE'|'REJECT'|'CLARIFY'|'FORWARD', request: req }
+  const [actionDialog, setActionDialog] = useState(null); // { type: 'APPROVE'|'REJECT'|'CLARIFY', request: req }
   const [actionComment, setActionComment] = useState('');
 
   // Account Mapping Modal State
@@ -88,7 +87,6 @@ export default function AdminDashboard({ initialSubTab = 'requests' }) {
   const filteredRequests = requests.filter(req => {
     if (requestFilter === 'PENDING') return req.status === 'Submitted' || req.status === 'Under Review';
     if (requestFilter === 'CLARIFICATION') return req.status === 'Need Clarification';
-    if (requestFilter === 'FORWARDED') return req.status === 'Forwarded for Approval';
     if (requestFilter === 'RESOLVED') return req.status === 'Approved' || req.status === 'Rejected';
     return true;
   });
@@ -112,8 +110,6 @@ export default function AdminDashboard({ initialSubTab = 'requests' }) {
         return;
       }
       requestClarification(request.requestId, currentUser, actionComment);
-    } else if (type === 'FORWARD') {
-      forwardForApproval(request.requestId, currentUser, actionComment);
     }
 
     setActionDialog(null);
@@ -269,14 +265,6 @@ export default function AdminDashboard({ initialSubTab = 'requests' }) {
                 Awaiting Clarification ({requests.filter(r => r.status === 'Need Clarification').length})
               </button>
               <button
-                onClick={() => setRequestFilter('FORWARDED')}
-                className={`px-3 py-1.5 rounded-lg font-bold transition-all ${
-                  requestFilter === 'FORWARDED' ? 'bg-amber-600 text-white' : 'bg-amber-50 text-amber-800 hover:bg-amber-100'
-                }`}
-              >
-                With CEO ({requests.filter(r => r.status === 'Forwarded for Approval').length})
-              </button>
-              <button
                 onClick={() => setRequestFilter('RESOLVED')}
                 className={`px-3 py-1.5 rounded-lg font-bold transition-all ${
                   requestFilter === 'RESOLVED' ? 'bg-emerald-600 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
@@ -389,19 +377,6 @@ export default function AdminDashboard({ initialSubTab = 'requests' }) {
                           >
                             <HelpCircle className="w-3 h-3" />
                             Clarify
-                          </button>
-
-                          {/* 4. Forward for Higher Approval (CEO) */}
-                          <button
-                            onClick={() => {
-                              setActionDialog({ type: 'FORWARD', request: req });
-                              setActionComment('Forwarding to CEO for final review.');
-                            }}
-                            className="px-2.5 py-1.5 bg-gradient-to-r from-red-700 to-amber-600 hover:from-red-800 hover:to-amber-700 text-white rounded-lg text-xs font-bold flex items-center gap-1 shadow-xs transition-colors"
-                            title="Forward to Higher Approver / CEO"
-                          >
-                            <SendHorizontal className="w-3 h-3" />
-                            Forward to CEO
                           </button>
                         </div>
                       )}
@@ -602,23 +577,21 @@ export default function AdminDashboard({ initialSubTab = 'requests' }) {
             </div>
           </div>
 
-          {/* Institutional Leadership & Administrators List */}
-          {users.filter(u => u.role === 'ADMIN' || u.role === 'CEO').length > 0 && (
+          {/* Institutional Administrators List */}
+          {users.filter(u => u.role === 'ADMIN').length > 0 && (
             <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
               <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">
-                Executive Leadership & Administrators ({users.filter(u => u.role === 'ADMIN' || u.role === 'CEO').length})
+                Campus Administrators ({users.filter(u => u.role === 'ADMIN').length})
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                {users.filter(u => u.role === 'ADMIN' || u.role === 'CEO').map(admin => (
+                {users.filter(u => u.role === 'ADMIN').map(admin => (
                   <div key={admin.uid} className="p-3 rounded-xl bg-slate-50 border border-slate-200/80 text-xs flex items-start justify-between">
                     <div>
                       <div className="font-bold text-slate-900">{admin.name}</div>
                       <div className="text-[11px] text-red-700 font-medium">{admin.institutionalEmail}</div>
                       {admin.phone && <div className="text-[11px] text-slate-600">📞 {admin.phone}</div>}
-                      <span className={`inline-block mt-1 px-2 py-0.5 rounded text-[10px] font-bold ${
-                        admin.role === 'CEO' ? 'bg-amber-100 text-amber-900 border border-amber-300' : 'bg-red-100 text-red-900'
-                      }`}>
-                        {admin.role === 'CEO' ? 'CEO / Higher Approver' : 'Administrative Head'}
+                      <span className="inline-block mt-1 px-2 py-0.5 rounded text-[10px] font-bold bg-red-100 text-red-900">
+                        Administrative Head
                       </span>
                     </div>
                     <button
@@ -896,7 +869,6 @@ export default function AdminDashboard({ initialSubTab = 'requests' }) {
                 >
                   <option value="CLUB_HEAD">Club Head (Submit Requests)</option>
                   <option value="ADMIN">Administrative Head (Full Control)</option>
-                  <option value="CEO">CEO / Higher Approver</option>
                 </select>
               </div>
 

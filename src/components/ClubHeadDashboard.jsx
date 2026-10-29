@@ -378,7 +378,7 @@ export default function ClubHeadDashboard({ initialMode = 'my-requests', onSwitc
                   >
                     {REQUEST_CATEGORIES.map(cat => (
                       <option key={cat.id} value={cat.id}>
-                        {cat.label} {cat.requiresHigherApproval ? '(Includes CEO review)' : ''}
+                        {cat.label}
                       </option>
                     ))}
                   </select>

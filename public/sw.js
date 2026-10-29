@@ -1,6 +1,6 @@
 // GEI Campus Resource & Event Management System - Service Worker
-// Cache Version - v5 Schedule Visibility & Desktop PWA Banner Fix
-const CACHE_NAME = 'gei-portal-pwa-v5';
+// Cache Version - v6 Simplified 2-tier Admin & Club Head Architecture
+const CACHE_NAME = 'gei-portal-pwa-v6';
 
 // Core shell assets to precache for offline support
 const PRECACHE_ASSETS = [

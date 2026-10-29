@@ -18,7 +18,6 @@ import {
 // Code Splitting: Lazy load authenticated portals to minimize initial bundle size
 const ClubHeadDashboard = lazy(() => import('./components/ClubHeadDashboard'));
 const AdminDashboard = lazy(() => import('./components/AdminDashboard'));
-const CeoDashboard = lazy(() => import('./components/CeoDashboard'));
 const LoginModal = lazy(() => import('./components/LoginModal'));
 
 const LoadingFallback = () => (
@@ -28,13 +27,12 @@ const LoadingFallback = () => (
 );
 
 function AppContent() {
-  const { currentUser, updatePassword, isAdmin, isCeo, isClubHead } = useAuth();
+  const { currentUser, updatePassword, isAdmin, isClubHead } = useAuth();
   const { academicYear } = useData();
 
   // Active navigation tab
   const [activeTab, setActiveTab] = useState(() => {
     if (isAdmin) return 'admin-requests';
-    if (isCeo) return 'ceo-approvals';
     if (isClubHead) return 'club-requests';
     return 'schedule';
   });
@@ -45,11 +43,9 @@ function AppContent() {
 
   // Sync tab with role change
   useEffect(() => {
-    if (isAdmin && (activeTab === 'club-requests' || activeTab === 'new-request' || activeTab === 'ceo-approvals')) {
+    if (isAdmin && (activeTab === 'club-requests' || activeTab === 'new-request')) {
       setActiveTab('admin-requests');
-    } else if (isCeo && (activeTab === 'club-requests' || activeTab === 'new-request' || activeTab === 'admin-requests' || activeTab === 'admin-equipment' || activeTab === 'admin-registry')) {
-      setActiveTab('ceo-approvals');
-    } else if (isClubHead && (activeTab === 'admin-requests' || activeTab === 'admin-equipment' || activeTab === 'admin-registry' || activeTab === 'ceo-approvals')) {
+    } else if (isClubHead && (activeTab === 'admin-requests' || activeTab === 'admin-equipment' || activeTab === 'admin-registry')) {
       setActiveTab('club-requests');
     }
   }, [currentUser]);
@@ -136,11 +132,6 @@ function AppContent() {
           {/* VIEW 7: Administrative Dashboard - 21 Clubs & Account Registry */}
           {activeTab === 'admin-registry' && (
             <AdminDashboard initialSubTab="registry" />
-          )}
-
-          {/* VIEW 8: CEO Higher Approver Review Queue */}
-          {activeTab === 'ceo-approvals' && (
-            <CeoDashboard />
           )}
         </Suspense>
 

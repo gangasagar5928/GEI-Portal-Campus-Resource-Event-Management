@@ -12,11 +12,10 @@ import {
 } from 'lucide-react';
 
 export default function MobileBottomNav({ activeTab, setActiveTab, onOpenLogin }) {
-  const { currentUser, isAdmin, isCeo, isClubHead } = useAuth();
+  const { currentUser, isAdmin, isClubHead } = useAuth();
   const { requests, syncStatus } = useData();
 
   const pendingAdminCount = requests.filter(r => r.status === 'Submitted' || r.status === 'Under Review').length;
-  const pendingCeoCount = requests.filter(r => r.status === 'Forwarded for Approval').length;
   const pendingClarificationCount = requests.filter(r => 
     r.status === 'Need Clarification' && (isClubHead ? r.submittedByUid === currentUser?.uid : true)
   ).length;
@@ -92,32 +91,11 @@ export default function MobileBottomNav({ activeTab, setActiveTab, onOpenLogin }
           </button>
         )}
 
-        {/* CEO Review */}
-        {isCeo && (
-          <button
-            onClick={() => setActiveTab('ceo-queue')}
-            className={`relative flex flex-col items-center justify-center py-1 px-2.5 rounded-lg text-[10px] font-bold transition-colors ${
-              activeTab === 'ceo-queue'
-                ? 'text-amber-400 font-extrabold'
-                : 'text-slate-400 hover:text-slate-200'
-            }`}
-          >
-            <CheckCircle2 className="w-5 h-5 mb-0.5" />
-            <span>Approvals</span>
-            {pendingCeoCount > 0 && (
-              <span className="absolute top-0.5 right-1 px-1 min-w-4 h-4 bg-amber-500 text-slate-950 rounded-full text-[9px] font-black flex items-center justify-center">
-                {pendingCeoCount}
-              </span>
-            )}
-          </button>
-        )}
-
         {/* User / Login Button */}
         {currentUser ? (
           <button
             onClick={() => {
               if (isAdmin) setActiveTab('admin');
-              else if (isCeo) setActiveTab('ceo-queue');
               else if (isClubHead) setActiveTab('club-requests');
             }}
             className="flex flex-col items-center justify-center py-1 px-2.5 rounded-lg text-[10px] font-bold text-slate-300"

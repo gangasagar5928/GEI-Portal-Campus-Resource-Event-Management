@@ -81,7 +81,6 @@ export function AuthProvider({ children }) {
     logout,
     updatePassword,
     isAdmin: currentUser?.role === 'ADMIN',
-    isCeo: currentUser?.role === 'CEO',
     isClubHead: currentUser?.role === 'CLUB_HEAD',
     isPublic: !currentUser || currentUser?.role === 'PUBLIC'
   };

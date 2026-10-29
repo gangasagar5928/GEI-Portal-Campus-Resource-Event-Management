@@ -285,17 +285,17 @@ export default function LoginModal({ isOpen, onClose }) {
                   <span>Demo Evaluation Accounts</span>
                   <span className="text-[9px] text-emerald-700 font-bold bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200">1-Click Fill</span>
                 </div>
-                <div className="grid grid-cols-3 gap-1.5 text-left">
+                <div className="grid grid-cols-2 gap-2 text-left">
                   <button
                     type="button"
                     onClick={() => {
                       setIdentifier('admin@gei.edu');
                       setPassword('Galgotias@2026');
                     }}
-                    className="p-1.5 rounded-lg bg-slate-50 hover:bg-amber-50 border border-slate-200 hover:border-amber-300 transition-colors text-left"
+                    className="p-2 rounded-lg bg-slate-50 hover:bg-amber-50 border border-slate-200 hover:border-amber-300 transition-colors text-left"
                   >
-                    <span className="block font-bold text-[11px] text-amber-800">Admin</span>
-                    <span className="block text-[9px] text-slate-600 truncate">admin@gei.edu</span>
+                    <span className="block font-bold text-xs text-amber-800">Administrator</span>
+                    <span className="block text-[10px] text-slate-600 truncate">admin@gei.edu</span>
                   </button>
                   <button
                     type="button"
@@ -303,21 +303,10 @@ export default function LoginModal({ isOpen, onClose }) {
                       setIdentifier('club@gei.edu');
                       setPassword('Galgotias@2026');
                     }}
-                    className="p-1.5 rounded-lg bg-slate-50 hover:bg-emerald-50 border border-slate-200 hover:border-emerald-300 transition-colors text-left"
+                    className="p-2 rounded-lg bg-slate-50 hover:bg-emerald-50 border border-slate-200 hover:border-emerald-300 transition-colors text-left"
                   >
-                    <span className="block font-bold text-[11px] text-emerald-800">Club Head</span>
-                    <span className="block text-[9px] text-slate-600 truncate">club@gei.edu</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setIdentifier('ceo@gei.edu');
-                      setPassword('Galgotias@2026');
-                    }}
-                    className="p-1.5 rounded-lg bg-slate-50 hover:bg-rose-50 border border-slate-200 hover:border-red-300 transition-colors text-left"
-                  >
-                    <span className="block font-bold text-[11px] text-red-800">CEO / Lead</span>
-                    <span className="block text-[9px] text-slate-600 truncate">ceo@gei.edu</span>
+                    <span className="block font-bold text-xs text-emerald-800">Club Head</span>
+                    <span className="block text-[10px] text-slate-600 truncate">club@gei.edu</span>
                   </button>
                 </div>
                 <p className="text-[10px] text-slate-600 mt-1.5 text-center">

@@ -54,19 +54,6 @@ export const INITIAL_USERS = [
     mustChangePassword: false,
     active: true,
     createdAt: '2026-10-28T00:00:00.000Z'
-  },
-  {
-    uid: 'demo_ceo_01',
-    name: 'Demo Executive Approver',
-    institutionalEmail: 'ceo@gei.edu',
-    phone: '9876543212',
-    role: 'CEO',
-    title: 'Executive Approver',
-    password: 'Galgotias@2026',
-    temporaryPassword: 'Galgotias@2026',
-    mustChangePassword: false,
-    active: true,
-    createdAt: '2026-10-28T00:00:00.000Z'
   }
 ];
 
@@ -83,17 +70,17 @@ export const INITIAL_EQUIPMENT = [
 ];
 
 export const VENUES = [
-  { id: 'auditorium-main', name: 'Main Auditorium (Block C)', capacity: 1200, type: 'Auditorium', requiresHigherApproval: true },
-  { id: 'auditorium-mini', name: 'Mini Auditorium (Block E)', capacity: 400, type: 'Auditorium', requiresHigherApproval: false },
-  { id: 'seminar-hall-1', name: 'Central Seminar Hall A', capacity: 250, type: 'Seminar Hall', requiresHigherApproval: false },
-  { id: 'amphitheatre', name: 'Open Air Amphitheatre', capacity: 1500, type: 'Open Air', requiresHigherApproval: true }
+  { id: 'auditorium-main', name: 'Main Auditorium (Block C)', capacity: 1200, type: 'Auditorium' },
+  { id: 'auditorium-mini', name: 'Mini Auditorium (Block E)', capacity: 400, type: 'Auditorium' },
+  { id: 'seminar-hall-1', name: 'Central Seminar Hall A', capacity: 250, type: 'Seminar Hall' },
+  { id: 'amphitheatre', name: 'Open Air Amphitheatre', capacity: 1500, type: 'Open Air' }
 ];
 
 export const REQUEST_CATEGORIES = [
-  { id: 'auditorium', label: 'Auditorium Booking', requiresHigherApproval: true, description: 'Requires Administrative review and optional CEO sign-off' },
-  { id: 'equipment', label: 'Equipment & AV Requisition', requiresHigherApproval: false, description: 'Handled independently by Administrative Head' },
-  { id: 'venue_equipment', label: 'Venue & Equipment Bundle', requiresHigherApproval: true, description: 'Auditorium plus technical equipment support' },
-  { id: 'special_event', label: 'High-Value / Exceptional Event', requiresHigherApproval: true, description: 'Celebrity guest, multi-day fest, requires CEO approval' }
+  { id: 'auditorium', label: 'Auditorium Booking', description: 'Requires Administrative review and scheduling' },
+  { id: 'equipment', label: 'Equipment & AV Requisition', description: 'Handled independently by Administrative Head' },
+  { id: 'venue_equipment', label: 'Venue & Equipment Bundle', description: 'Auditorium plus technical equipment support' },
+  { id: 'special_event', label: 'High-Value / Exceptional Event', description: 'Celebrity guest, multi-day fest, requires Administrative approval' }
 ];
 
 // Confirmed schedule events for campus auditoriums (2026-27 Academic Year)
@@ -187,7 +174,6 @@ export const INITIAL_REQUESTS = [
     additionalNotes: 'Need AV sound check by 08:30 AM.',
     status: 'Submitted',
     currentApproverRole: 'ADMIN',
-    requiresHigherApproval: true,
     createdAt: '2026-10-28T09:00:00.000Z',
     updatedAt: '2026-10-28T09:00:00.000Z',
     history: [
@@ -221,9 +207,8 @@ export const INITIAL_REQUESTS = [
       { name: 'Power Extension Spools (25m)', qty: 4 }
     ],
     additionalNotes: 'Safety barricades around arena arena pre-arranged.',
-    status: 'Forwarded for Approval',
-    currentApproverRole: 'CEO',
-    requiresHigherApproval: true,
+    status: 'Under Review',
+    currentApproverRole: 'ADMIN',
     createdAt: '2026-10-27T11:00:00.000Z',
     updatedAt: '2026-10-28T10:15:00.000Z',
     history: [
@@ -237,10 +222,10 @@ export const INITIAL_REQUESTS = [
       },
       {
         id: 'h-3',
-        action: 'FORWARDED_FOR_APPROVAL',
+        action: 'UNDER_REVIEW',
         actorName: 'Demo Administrator',
         actorRole: 'ADMIN',
-        comment: 'Auditorium slot checked and available. High-attendance event forwarded for final executive sanction.',
+        comment: 'Auditorium slot checked and available. Under review for scheduling.',
         timestamp: '2026-10-28T10:15:00.000Z'
       }
     ]
@@ -266,7 +251,6 @@ export const INITIAL_REQUESTS = [
     additionalNotes: 'Requires low ambient lighting for technical cue testing.',
     status: 'Need Clarification',
     currentApproverRole: 'CLUB_HEAD',
-    requiresHigherApproval: false,
     clarificationPrompt: 'Please provide stage safety clearance and faculty coordinator sign-off for evening lighting.',
     createdAt: '2026-10-28T12:00:00.000Z',
     updatedAt: '2026-10-28T14:30:00.000Z',
@@ -311,7 +295,6 @@ export const INITIAL_REQUESTS = [
     additionalNotes: 'VIP guests arriving at 10:00 AM.',
     status: 'Approved',
     currentApproverRole: 'COMPLETED',
-    requiresHigherApproval: true,
     createdAt: '2026-10-25T10:00:00.000Z',
     updatedAt: '2026-10-26T11:00:00.000Z',
     history: [
@@ -325,18 +308,10 @@ export const INITIAL_REQUESTS = [
       },
       {
         id: 'h-7',
-        action: 'FORWARDED_FOR_APPROVAL',
+        action: 'APPROVED',
         actorName: 'Demo Administrator',
         actorRole: 'ADMIN',
-        comment: 'Slot checked and technical requirements verified.',
-        timestamp: '2026-10-25T14:00:00.000Z'
-      },
-      {
-        id: 'h-8',
-        action: 'APPROVED',
-        actorName: 'Demo Executive Approver',
-        actorRole: 'CEO',
-        comment: 'Approved. Ensure audio coverage and crowd control.',
+        comment: 'Slot checked and technical requirements verified. Approved.',
         timestamp: '2026-10-26T11:00:00.000Z'
       }
     ]

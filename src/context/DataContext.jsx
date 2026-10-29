@@ -222,10 +222,6 @@ export function DataProvider({ children }) {
 
   // Submit new request
   const submitRequest = async (requestData, currentUser) => {
-    const categoryConfig = REQUEST_CATEGORIES.find(c => c.id === requestData.category);
-    const venueConfig = VENUES.find(v => v.name === requestData.venue);
-    const requiresHigher = Boolean(categoryConfig?.requiresHigherApproval || venueConfig?.requiresHigherApproval);
-
     const newRequestId = `req-2026-${String(requests.length + 1).padStart(3, '0')}`;
     const timestamp = new Date().toISOString();
 
@@ -248,7 +244,6 @@ export function DataProvider({ children }) {
       additionalNotes: requestData.additionalNotes || '',
       status: 'Submitted',
       currentApproverRole: 'ADMIN',
-      requiresHigherApproval: requiresHigher,
       createdAt: timestamp,
       updatedAt: timestamp,
       history: [
@@ -418,32 +413,6 @@ export function DataProvider({ children }) {
             actorName: actor.name,
             actorRole: actor.role,
             comment: responseText,
-            timestamp
-          }
-        ]
-      };
-      if (db) updateDoc(doc(db, 'requests', requestId), updated).catch(console.warn);
-      return updated;
-    }));
-  };
-
-  const forwardForApproval = async (requestId, actor, comment = '') => {
-    const timestamp = new Date().toISOString();
-    setRequests(prev => prev.map(req => {
-      if (req.requestId !== requestId) return req;
-      const updated = {
-        ...req,
-        status: 'Forwarded for Approval',
-        currentApproverRole: 'CEO',
-        updatedAt: timestamp,
-        history: [
-          ...req.history,
-          {
-            id: `hist-${Date.now()}`,
-            action: 'FORWARDED_FOR_APPROVAL',
-            actorName: actor.name,
-            actorRole: actor.role,
-            comment: comment || 'Forwarded for executive review.',
             timestamp
           }
         ]
@@ -627,7 +596,6 @@ export function DataProvider({ children }) {
     rejectRequest,
     requestClarification,
     submitClarificationResponse,
-    forwardForApproval,
     addScheduleEvent,
     deleteScheduleEvent,
     mapUserAccount,

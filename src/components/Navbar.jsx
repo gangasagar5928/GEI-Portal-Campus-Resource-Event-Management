@@ -16,12 +16,11 @@ import {
 } from 'lucide-react';
 
 export default function Navbar({ activeTab, setActiveTab, onOpenLogin }) {
-  const { currentUser, logout, isAdmin, isCeo, isClubHead, isPublic } = useAuth();
+  const { currentUser, logout, isAdmin, isClubHead, isPublic } = useAuth();
   const { requests, users, clubs } = useData();
 
   // Badge counts
   const pendingAdminCount = requests.filter(r => r.status === 'Submitted' || r.status === 'Under Review').length;
-  const pendingCeoCount = requests.filter(r => r.status === 'Forwarded for Approval').length;
   const pendingClarificationCount = requests.filter(r => 
     r.status === 'Need Clarification' && (isClubHead ? r.submittedByUid === currentUser?.uid : true)
   ).length;
@@ -151,25 +150,6 @@ export default function Navbar({ activeTab, setActiveTab, onOpenLogin }) {
                 </button>
               </>
             )}
-
-            {isCeo && (
-              <button
-                onClick={() => setActiveTab('ceo-approvals')}
-                className={`relative flex items-center gap-1.5 px-2.5 py-1.5 lg:px-3 lg:py-2 rounded-lg text-xs lg:text-sm font-semibold whitespace-nowrap transition-all ${
-                  activeTab === 'ceo-approvals'
-                    ? 'bg-gradient-to-r from-red-700 to-amber-600 text-white shadow-md'
-                    : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
-                }`}
-              >
-                <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0" />
-                <span><span className="hidden lg:inline">CEO </span>Review</span>
-                {pendingCeoCount > 0 && (
-                  <span className="ml-1 px-1.5 py-0.2 bg-amber-500 text-slate-950 rounded-full text-[10px] font-bold animate-pulse">
-                    {pendingCeoCount}
-                  </span>
-                )}
-              </button>
-            )}
           </nav>
 
           {/* User Profile & Auth Controls */}
@@ -182,7 +162,6 @@ export default function Navbar({ activeTab, setActiveTab, onOpenLogin }) {
                 <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl bg-[#200609] border border-red-900/60 text-xs shadow-xs shrink-0 max-w-[170px]">
                   <div className={`w-2 h-2 rounded-full shrink-0 ${
                     isAdmin ? 'bg-amber-400 ring-2 ring-amber-400/20' :
-                    isCeo ? 'bg-amber-400 ring-2 ring-amber-400/20' :
                     isClubHead ? 'bg-emerald-400 ring-2 ring-emerald-400/20' : 'bg-slate-400'
                   }`} />
                   <div className="text-left hidden md:block min-w-0">
@@ -191,7 +170,6 @@ export default function Navbar({ activeTab, setActiveTab, onOpenLogin }) {
                     </div>
                     <div className="text-[10px] text-amber-200/80 leading-tight truncate whitespace-nowrap">
                       {isAdmin ? 'Administrative Head' :
-                       isCeo ? 'CEO Approver' :
                        currentUser.clubName ? `${currentUser.clubName} Head` : 'Authorized Account'}
                     </div>
                   </div>
@@ -279,17 +257,6 @@ export default function Navbar({ activeTab, setActiveTab, onOpenLogin }) {
               Clubs Roster
             </button>
           </>
-        )}
-
-        {isCeo && (
-          <button
-            onClick={() => setActiveTab('ceo-approvals')}
-            className={`px-3 py-1.5 rounded-md whitespace-nowrap font-medium ${
-              activeTab === 'ceo-approvals' ? 'bg-red-700 text-white' : 'text-slate-400'
-            }`}
-          >
-            CEO Queue ({pendingCeoCount})
-          </button>
         )}
       </div>
     </header>

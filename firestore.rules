@@ -18,15 +18,8 @@ service cloud.firestore {
       );
     }
 
-    function isCeo() {
-      return isAuthenticated() && (
-        getUserData().role == 'CEO' ||
-        request.auth.token.role == 'CEO'
-      );
-    }
-
     function isApprover() {
-      return isAdmin() || isCeo();
+      return isAdmin();
     }
 
     function isClubHead() {
@@ -84,7 +77,7 @@ service cloud.firestore {
 
       // Updates:
       // 1. Club heads can update only when status is 'Need Clarification' to supply info
-      // 2. Approvers (Admin/CEO) can update status, currentApproverRole, comments
+      // 2. Administrators can update status, currentApproverRole, comments
       allow update: if isAuthenticated() && (
         (isApprover()) ||
         (
