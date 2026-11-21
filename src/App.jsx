@@ -41,14 +41,18 @@ function AppContent() {
   const [newPasswordInput, setNewPasswordInput] = useState('');
   const [showPasswordChangeModal, setShowPasswordChangeModal] = useState(false);
 
-  // Sync tab with role change
+  // Sync tab with role change & enforce route-level authorization
   useEffect(() => {
-    if (isAdmin && (activeTab === 'club-requests' || activeTab === 'new-request')) {
+    if (activeTab.startsWith('admin') && !isAdmin) {
+      setActiveTab('schedule');
+    } else if ((activeTab === 'club-requests' || activeTab === 'new-request') && !currentUser) {
+      setActiveTab('schedule');
+    } else if (isAdmin && (activeTab === 'club-requests' || activeTab === 'new-request')) {
       setActiveTab('admin-requests');
-    } else if (isClubHead && (activeTab === 'admin-requests' || activeTab === 'admin-equipment' || activeTab === 'admin-registry')) {
+    } else if (isClubHead && activeTab.startsWith('admin')) {
       setActiveTab('club-requests');
     }
-  }, [currentUser]);
+  }, [currentUser, activeTab, isAdmin, isClubHead]);
 
   // First time login password change requirement (PRD Section 4)
   useEffect(() => {
@@ -96,10 +100,10 @@ function AppContent() {
           }} />
         )}
 
-        {/* Authenticated Lazy Views wrapped in Suspense */}
+        {/* Authenticated Lazy Views wrapped in Suspense with strict role guards */}
         <Suspense fallback={<LoadingFallback />}>
           {/* VIEW 2: Club Head Dashboard - Requests */}
-          {activeTab === 'club-requests' && (
+          {activeTab === 'club-requests' && (isClubHead || isAdmin) && (
             <ClubHeadDashboard
               initialMode="my-requests"
               onSwitchToSchedule={() => setActiveTab('schedule')}
@@ -107,7 +111,7 @@ function AppContent() {
           )}
 
           {/* VIEW 3: Club Head Dashboard - New Request */}
-          {activeTab === 'new-request' && (
+          {activeTab === 'new-request' && (isClubHead || isAdmin) && (
             <ClubHeadDashboard
               initialMode="new-request"
               onSwitchToSchedule={() => setActiveTab('schedule')}
@@ -115,22 +119,22 @@ function AppContent() {
           )}
 
           {/* VIEW 4: Administrative Dashboard - Requests Queue */}
-          {activeTab === 'admin-requests' && (
+          {activeTab === 'admin-requests' && isAdmin && (
             <AdminDashboard initialSubTab="requests" />
           )}
 
           {/* VIEW 5: Administrative Dashboard - Schedule Management */}
-          {activeTab === 'admin-schedule' && (
+          {activeTab === 'admin-schedule' && isAdmin && (
             <AdminDashboard initialSubTab="schedule" />
           )}
 
           {/* VIEW 6: Administrative Dashboard - Equipment Inventory */}
-          {activeTab === 'admin-equipment' && (
+          {activeTab === 'admin-equipment' && isAdmin && (
             <AdminDashboard initialSubTab="equipment" />
           )}
 
           {/* VIEW 7: Administrative Dashboard - 21 Clubs & Account Registry */}
-          {activeTab === 'admin-registry' && (
+          {activeTab === 'admin-registry' && isAdmin && (
             <AdminDashboard initialSubTab="registry" />
           )}
         </Suspense>

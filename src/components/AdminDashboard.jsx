@@ -27,7 +27,7 @@ import { VENUES, REQUEST_CATEGORIES } from '../data/initialRegistry';
 import RequestDetailsModal from './RequestDetailsModal';
 
 export default function AdminDashboard({ initialSubTab = 'requests' }) {
-  const { currentUser } = useAuth();
+  const { currentUser, isAdmin } = useAuth();
   const { 
     requests, 
     clubs, 
@@ -163,6 +163,16 @@ export default function AdminDashboard({ initialSubTab = 'requests' }) {
       visibility: 'public'
     });
   };
+
+  if (!isAdmin) {
+    return (
+      <div className="bg-white rounded-2xl p-8 border border-red-200 text-center max-w-md mx-auto my-12 shadow-sm">
+        <ShieldCheck className="w-12 h-12 text-red-600 mx-auto mb-3" />
+        <h2 className="text-base font-bold text-slate-900">Restricted Route: Access Denied</h2>
+        <p className="text-xs text-slate-500 mt-1">This console requires verified institutional administrative credentials.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">

@@ -1,5 +1,13 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { INITIAL_USERS } from '../data/initialRegistry';
+import { 
+  verifyPassword, 
+  hashPassword, 
+  getRateLimitStatus, 
+  recordFailedLogin, 
+  clearRateLimit,
+  sanitizeInput
+} from '../utils/security';
 
 const AuthContext = createContext(null);
 
@@ -14,9 +22,16 @@ export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) return JSON.parse(saved);
-    } catch (e) {
-      console.error('Failed to load user state', e);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        // Ensure no credential fields linger in restored session
+        delete parsed.password;
+        delete parsed.temporaryPassword;
+        delete parsed.passwordHash;
+        return parsed;
+      }
+    } catch {
+      // Ignore parse errors
     }
     // Starts unauthenticated (Public Visitor view) by default
     return null;
@@ -24,7 +39,9 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     if (currentUser) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(currentUser));
+      // Strip any sensitive credentials before writing to localStorage
+      const { password, temporaryPassword, passwordHash, ...safeUser } = currentUser;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(safeUser));
     } else {
       localStorage.removeItem(STORAGE_KEY);
     }
@@ -32,9 +49,15 @@ export function AuthProvider({ children }) {
 
   // Login via Institutional Email OR Phone Number + Password
   const login = async (identifier, password, usersList = []) => {
-    const rawInput = identifier.trim();
+    const rawInput = sanitizeInput(identifier.trim());
     const cleanEmailInput = rawInput.toLowerCase();
     const cleanPhoneInput = cleanPhone(rawInput);
+
+    // Rate Limiting & Anti-Brute-Force Lockout check
+    const rateStatus = getRateLimitStatus(rawInput);
+    if (rateStatus.isLocked) {
+      throw new Error(`Account temporarily locked due to repeated failed attempts. Please retry in ${rateStatus.remainingSec}s.`);
+    }
 
     // Merge dynamic users with baseline demo users
     const allUsers = [...usersList, ...INITIAL_USERS];
@@ -47,6 +70,7 @@ export function AuthProvider({ children }) {
     });
 
     if (!match) {
+      recordFailedLogin(rawInput);
       throw new Error('No registered account found with this institutional email or phone number. Contact System Administrator.');
     }
 
@@ -54,25 +78,41 @@ export function AuthProvider({ children }) {
       throw new Error('Account deactivated by System Administrator. Access denied.');
     }
 
-    // Password validation (checks user password or temporary initial password)
-    const validPassword = match.password || match.temporaryPassword || 'Galgotias@2026';
-    if (password !== validPassword && password !== 'Galgotias@2026') {
-      throw new Error('Invalid password. Please check your credentials.');
+    // Cryptographic PBKDF2 Password Verification
+    const targetHash = match.passwordHash || match.password || match.temporaryPassword || 'v1:6792eda95423ed8b9076d022b3a787aa:029345cd47f60b6cb6c6d4ebd69cbe16068a81a8da09d75d0f900c14f39ffc1f';
+    const isPasswordValid = await verifyPassword(password, targetHash);
+
+    if (!isPasswordValid) {
+      const attemptInfo = recordFailedLogin(rawInput);
+      if (attemptInfo && attemptInfo.isLocked) {
+        throw new Error('Maximum login attempts exceeded. Account locked for 60 seconds.');
+      }
+      const remainingMsg = attemptInfo?.attemptsRemaining !== undefined 
+        ? ` (${attemptInfo.attemptsRemaining} attempt${attemptInfo.attemptsRemaining === 1 ? '' : 's'} remaining)` 
+        : '';
+      throw new Error(`Invalid password. Please check your credentials.${remainingMsg}`);
     }
 
-    // Set authenticated session
-    setCurrentUser(match);
-    return match;
+    // Successful authentication: clear brute force counter
+    clearRateLimit(rawInput);
+
+    // Set sanitized authenticated session (omit all password hashes)
+    const { password: _p, temporaryPassword: _tp, passwordHash: _ph, ...safeSessionUser } = match;
+    setCurrentUser(safeSessionUser);
+    return safeSessionUser;
   };
 
   const logout = () => {
     setCurrentUser(null);
   };
 
-  const updatePassword = (newPassword) => {
+  const updatePassword = async (newPassword) => {
     if (!currentUser) return;
-    const updated = { ...currentUser, password: newPassword, mustChangePassword: false };
-    setCurrentUser(updated);
+    const newHash = await hashPassword(newPassword);
+    const updated = { ...currentUser, passwordHash: newHash, mustChangePassword: false };
+    const { password: _p, temporaryPassword: _tp, passwordHash: _ph, ...safeUser } = updated;
+    setCurrentUser(safeUser);
+    return newHash;
   };
 
   const value = {

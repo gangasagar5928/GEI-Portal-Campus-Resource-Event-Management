@@ -35,8 +35,7 @@ export const INITIAL_USERS = [
     phone: '9876543210',
     role: 'ADMIN',
     title: 'Administrative Head',
-    password: 'Galgotias@2026',
-    temporaryPassword: 'Galgotias@2026',
+    passwordHash: 'v1:6792eda95423ed8b9076d022b3a787aa:029345cd47f60b6cb6c6d4ebd69cbe16068a81a8da09d75d0f900c14f39ffc1f',
     mustChangePassword: false,
     active: true,
     createdAt: '2026-10-28T00:00:00.000Z'
@@ -49,8 +48,7 @@ export const INITIAL_USERS = [
     role: 'CLUB_HEAD',
     clubId: 'apex',
     clubName: 'Apex',
-    password: 'Galgotias@2026',
-    temporaryPassword: 'Galgotias@2026',
+    passwordHash: 'v1:6792eda95423ed8b9076d022b3a787aa:029345cd47f60b6cb6c6d4ebd69cbe16068a81a8da09d75d0f900c14f39ffc1f',
     mustChangePassword: false,
     active: true,
     createdAt: '2026-10-28T00:00:00.000Z'

@@ -16,6 +16,7 @@ import {
   updateDoc, 
   onSnapshot 
 } from 'firebase/firestore';
+import { hashPassword, sanitizeInput, sanitizeObject } from '../utils/security';
 
 const DataContext = createContext(null);
 
@@ -123,7 +124,7 @@ export function DataProvider({ children }) {
           }
           setSyncStatus(navigator.onLine ? 'live' : 'offline');
           setLastSyncTime(new Date().toISOString());
-        }, err => console.log('Firestore requests listener:', err.message))
+        }, () => {})
       );
 
       unsubs.push(
@@ -145,7 +146,7 @@ export function DataProvider({ children }) {
           }
           setSyncStatus(navigator.onLine ? 'live' : 'offline');
           setLastSyncTime(new Date().toISOString());
-        }, err => console.log('Firestore schedule listener:', err.message))
+        }, () => {})
       );
 
       unsubs.push(
@@ -167,7 +168,7 @@ export function DataProvider({ children }) {
           }
           setSyncStatus(navigator.onLine ? 'live' : 'offline');
           setLastSyncTime(new Date().toISOString());
-        }, err => console.log('Firestore users listener:', err.message))
+        }, () => {})
       );
     } catch (e) {
       console.warn('Real-time listener setup error:', e);
@@ -220,7 +221,7 @@ export function DataProvider({ children }) {
     return { hasConflict: false };
   };
 
-  // Submit new request
+  // Submit new request with XSS input sanitization
   const submitRequest = async (requestData, currentUser) => {
     const newRequestId = `req-2026-${String(requests.length + 1).padStart(3, '0')}`;
     const timestamp = new Date().toISOString();
@@ -232,16 +233,19 @@ export function DataProvider({ children }) {
       submittedByUid: currentUser.uid,
       submittedByName: currentUser.name,
       submittedByPhone: currentUser.phone || '',
-      category: requestData.category,
-      title: requestData.title,
-      description: requestData.description,
-      requestedDate: requestData.requestedDate,
-      startTime: requestData.startTime,
-      endTime: requestData.endTime,
-      venue: requestData.venue,
+      category: sanitizeInput(requestData.category),
+      title: sanitizeInput(requestData.title),
+      description: sanitizeInput(requestData.description),
+      requestedDate: sanitizeInput(requestData.requestedDate),
+      startTime: sanitizeInput(requestData.startTime),
+      endTime: sanitizeInput(requestData.endTime),
+      venue: sanitizeInput(requestData.venue),
       expectedAttendance: Number(requestData.expectedAttendance) || 0,
-      equipmentRequirements: requestData.equipmentRequirements || [],
-      additionalNotes: requestData.additionalNotes || '',
+      equipmentRequirements: (requestData.equipmentRequirements || []).map(eq => ({
+        name: sanitizeInput(eq.name),
+        qty: Number(eq.qty) || 0
+      })),
+      additionalNotes: sanitizeInput(requestData.additionalNotes || ''),
       status: 'Submitted',
       currentApproverRole: 'ADMIN',
       createdAt: timestamp,
@@ -449,18 +453,19 @@ export function DataProvider({ children }) {
     setSchedule(prev => prev.filter(e => e.eventId !== eventId));
   };
 
-  // Master Admin Registration (Initial System Bootstrap)
+  // Master Admin Registration with PBKDF2 Password Hashing
   const registerMasterAdmin = async ({ name, institutionalEmail, phone, password, role = 'ADMIN' }) => {
-    const cleanEmail = institutionalEmail.trim().toLowerCase();
-    const cleanPhone = phone ? phone.trim() : '';
+    const cleanEmail = sanitizeInput(institutionalEmail).toLowerCase();
+    const cleanPhone = phone ? sanitizeInput(phone) : '';
     const uid = `admin_${Date.now()}`;
+    const hashedPassword = await hashPassword(password.trim());
 
     const adminUser = {
       uid,
-      name: name.trim(),
+      name: sanitizeInput(name),
       institutionalEmail: cleanEmail,
       phone: cleanPhone,
-      password: password.trim(),
+      passwordHash: hashedPassword,
       role: role.toUpperCase(),
       active: true,
       mustChangePassword: false,
@@ -474,27 +479,27 @@ export function DataProvider({ children }) {
       try {
         await setDoc(doc(db, 'users', uid), adminUser);
       } catch (err) {
-        console.warn('Firestore write error:', err.message);
+        if (import.meta.env.DEV) console.warn('Firestore write error:', err.message);
       }
     }
 
     return adminUser;
   };
 
-  // Provision / Map User Account (Supports Name, Email, Phone, Role)
+  // Provision / Map User Account with Cryptographic Hash
   const mapUserAccount = async ({ clubId, seatKey, name, institutionalEmail, phone, password, role = 'CLUB_HEAD' }) => {
-    const cleanEmail = institutionalEmail.trim().toLowerCase();
-    const cleanPhone = phone ? phone.trim() : '';
+    const cleanEmail = sanitizeInput(institutionalEmail).toLowerCase();
+    const cleanPhone = phone ? sanitizeInput(phone) : '';
     const uid = `user_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`;
     const club = clubs.find(c => c.id === clubId);
+    const hashedPassword = await hashPassword(password.trim());
 
     const userObj = {
       uid,
-      name: name.trim(),
+      name: sanitizeInput(name),
       institutionalEmail: cleanEmail,
       phone: cleanPhone,
-      password: password.trim(),
-      temporaryPassword: password.trim(),
+      passwordHash: hashedPassword,
       role,
       clubId: clubId || '',
       clubName: club?.name || '',
@@ -519,14 +524,14 @@ export function DataProvider({ children }) {
     if (clubId && seatKey) {
       setClubs(prev => prev.map(c => {
         if (c.id === clubId) {
-          return { ...c, [seatKey]: name.trim() };
+          return { ...c, [seatKey]: sanitizeInput(name) };
         }
         return c;
       }));
     }
 
     if (db) {
-      setDoc(doc(db, 'users', uid), userObj).catch(console.warn);
+      setDoc(doc(db, 'users', uid), userObj).catch(() => {});
     }
 
     return userObj;
@@ -536,24 +541,26 @@ export function DataProvider({ children }) {
     setUsers(prev => prev.map(u => {
       if (u.uid === uid) {
         const updated = { ...u, active: !u.active, updatedAt: new Date().toISOString() };
-        if (db) updateDoc(doc(db, 'users', uid), { active: updated.active }).catch(console.warn);
+        if (db) updateDoc(doc(db, 'users', uid), { active: updated.active }).catch(() => {});
         return updated;
       }
       return u;
     }));
   };
 
-  const resetUserPassword = (uid, tempPassword = 'Galgotias@2026') => {
+  const resetUserPassword = async (uid, tempPassword = 'Galgotias@2026') => {
+    const hashedPassword = await hashPassword(tempPassword);
     setUsers(prev => prev.map(u => {
       if (u.uid === uid) {
         const updated = { 
           ...u, 
           mustChangePassword: true, 
-          temporaryPassword: tempPassword,
-          password: tempPassword,
+          passwordHash: hashedPassword,
           updatedAt: new Date().toISOString() 
         };
-        if (db) updateDoc(doc(db, 'users', uid), { mustChangePassword: true, password: tempPassword }).catch(console.warn);
+        delete updated.password;
+        delete updated.temporaryPassword;
+        if (db) updateDoc(doc(db, 'users', uid), { mustChangePassword: true, passwordHash: hashedPassword }).catch(() => {});
         return updated;
       }
       return u;

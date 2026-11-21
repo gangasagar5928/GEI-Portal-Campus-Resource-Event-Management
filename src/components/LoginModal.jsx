@@ -81,7 +81,7 @@ export default function LoginModal({ isOpen, onClose }) {
       return;
     }
 
-    setResetMessage(`Password reset instruction sent to registered contact. (Temporary password: Galgotias@2026).`);
+    setResetMessage('Password reset instructions and verification notice have been dispatched to your registered institutional contact.');
     setError('');
   };
 

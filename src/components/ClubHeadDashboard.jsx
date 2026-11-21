@@ -23,7 +23,7 @@ import { VENUES, REQUEST_CATEGORIES } from '../data/initialRegistry';
 import RequestDetailsModal from './RequestDetailsModal';
 
 export default function ClubHeadDashboard({ initialMode = 'my-requests', onSwitchToSchedule }) {
-  const { currentUser } = useAuth();
+  const { currentUser, isClubHead, isAdmin } = useAuth();
   const { 
     requests, 
     equipment, 
@@ -141,6 +141,16 @@ export default function ClubHeadDashboard({ initialMode = 'my-requests', onSwitc
     setClarificationModalReq(null);
     setClarificationText('');
   };
+
+  if (!isClubHead && !isAdmin) {
+    return (
+      <div className="bg-white rounded-2xl p-8 border border-red-200 text-center max-w-md mx-auto my-12 shadow-sm">
+        <Info className="w-12 h-12 text-red-600 mx-auto mb-3" />
+        <h2 className="text-base font-bold text-slate-900">Restricted Route: Sign In Required</h2>
+        <p className="text-xs text-slate-500 mt-1">Please sign in as an authorized club head or campus administrator to access club booking requisitions.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
