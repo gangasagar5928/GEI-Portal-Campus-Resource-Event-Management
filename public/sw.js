@@ -1,6 +1,6 @@
 // GEI Campus Resource & Event Management System - Service Worker
-// Cache Version - v7 Comprehensive Security Hardening & PBKDF2 Auth
-const CACHE_NAME = 'gei-portal-pwa-v7';
+// Cache Version - v8 Secret Sanitization & Dynamic Credential Hardening
+const CACHE_NAME = 'gei-portal-pwa-v8';
 
 // Core shell assets to precache for offline support
 const PRECACHE_ASSETS = [

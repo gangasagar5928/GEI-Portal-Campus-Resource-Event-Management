@@ -16,7 +16,7 @@ import {
   updateDoc, 
   onSnapshot 
 } from 'firebase/firestore';
-import { hashPassword, sanitizeInput, sanitizeObject } from '../utils/security';
+import { hashPassword, sanitizeInput, sanitizeObject, generateSecureTempPassword } from '../utils/security';
 
 const DataContext = createContext(null);
 
@@ -548,8 +548,9 @@ export function DataProvider({ children }) {
     }));
   };
 
-  const resetUserPassword = async (uid, tempPassword = 'Galgotias@2026') => {
-    const hashedPassword = await hashPassword(tempPassword);
+  const resetUserPassword = async (uid, tempPassword) => {
+    const passwordToSet = tempPassword || generateSecureTempPassword(10);
+    const hashedPassword = await hashPassword(passwordToSet);
     setUsers(prev => prev.map(u => {
       if (u.uid === uid) {
         const updated = { 

@@ -79,7 +79,10 @@ export function AuthProvider({ children }) {
     }
 
     // Cryptographic PBKDF2 Password Verification
-    const targetHash = match.passwordHash || match.password || match.temporaryPassword || 'v1:6792eda95423ed8b9076d022b3a787aa:029345cd47f60b6cb6c6d4ebd69cbe16068a81a8da09d75d0f900c14f39ffc1f';
+    const targetHash = match.passwordHash || match.password || match.temporaryPassword;
+    if (!targetHash) {
+      throw new Error('Account does not have valid credentials configured. Contact System Administrator.');
+    }
     const isPasswordValid = await verifyPassword(password, targetHash);
 
     if (!isPasswordValid) {

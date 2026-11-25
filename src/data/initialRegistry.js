@@ -31,11 +31,11 @@ export const INITIAL_USERS = [
   {
     uid: 'demo_admin_01',
     name: 'Demo Administrator',
-    institutionalEmail: 'admin@gei.edu',
+    institutionalEmail: 'admin@example.com',
     phone: '9876543210',
     role: 'ADMIN',
     title: 'Administrative Head',
-    passwordHash: 'v1:6792eda95423ed8b9076d022b3a787aa:029345cd47f60b6cb6c6d4ebd69cbe16068a81a8da09d75d0f900c14f39ffc1f',
+    passwordHash: 'v1:a3a47bfdf647e50f980099b476485025:050bae03f9f15b017d10098e7f3a934a4d52602b8388aafa33ed2be76dc1a2f5',
     mustChangePassword: false,
     active: true,
     createdAt: '2026-10-28T00:00:00.000Z'
@@ -43,12 +43,12 @@ export const INITIAL_USERS = [
   {
     uid: 'demo_club_01',
     name: 'Demo Club Head',
-    institutionalEmail: 'club@gei.edu',
+    institutionalEmail: 'club@example.com',
     phone: '9876543211',
     role: 'CLUB_HEAD',
     clubId: 'apex',
     clubName: 'Apex',
-    passwordHash: 'v1:6792eda95423ed8b9076d022b3a787aa:029345cd47f60b6cb6c6d4ebd69cbe16068a81a8da09d75d0f900c14f39ffc1f',
+    passwordHash: 'v1:a3a47bfdf647e50f980099b476485025:050bae03f9f15b017d10098e7f3a934a4d52602b8388aafa33ed2be76dc1a2f5',
     mustChangePassword: false,
     active: true,
     createdAt: '2026-10-28T00:00:00.000Z'

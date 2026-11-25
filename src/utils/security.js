@@ -29,6 +29,20 @@ function hex2buf(hexStr) {
   return bytes;
 }
 
+/**
+ * Generate a cryptographically secure random temporary password.
+ * Safe for initial credential provisioning and administrative resets.
+ */
+export function generateSecureTempPassword(length = 10) {
+  const charset = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789!@#$%';
+  if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
+    const bytes = new Uint8Array(length);
+    crypto.getRandomValues(bytes);
+    return Array.from(bytes).map(b => charset[b % charset.length]).join('');
+  }
+  return Math.random().toString(36).slice(-8) + 'X9!';
+}
+
 // Constant-time comparison to prevent timing attacks
 function timingSafeEqual(a, b) {
   if (a.length !== b.length) return false;
@@ -127,7 +141,7 @@ export async function verifyPassword(plainPassword, storedHash) {
     }
   }
 
-  // Graceful fallback for legacy seed/migration (e.g. 'Galgotias@2026')
+  // Constant-time fallback for legacy plain hashes during migration
   return timingSafeEqual(plainPassword, storedHash);
 }
 

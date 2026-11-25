@@ -25,6 +25,7 @@ import {
 } from 'lucide-react';
 import { VENUES, REQUEST_CATEGORIES } from '../data/initialRegistry';
 import RequestDetailsModal from './RequestDetailsModal';
+import { generateSecureTempPassword } from '../utils/security';
 
 export default function AdminDashboard({ initialSubTab = 'requests' }) {
   const { currentUser, isAdmin } = useAuth();
@@ -62,7 +63,7 @@ export default function AdminDashboard({ initialSubTab = 'requests' }) {
   const [mappedEmail, setMappedEmail] = useState('');
   const [mappedPhone, setMappedPhone] = useState('');
   const [mappedRole, setMappedRole] = useState('CLUB_HEAD');
-  const [tempPassword, setTempPassword] = useState('Galgotias@2026');
+  const [tempPassword, setTempPassword] = useState(() => generateSecureTempPassword(10));
 
   // Manual Schedule Slot State
   const [showAddEventModal, setShowAddEventModal] = useState(false);
@@ -663,9 +664,10 @@ export default function AdminDashboard({ initialSubTab = 'requests' }) {
                                       {head1User.active ? 'Active' : 'Disabled'}
                                     </button>
                                     <button
-                                      onClick={() => {
-                                        resetUserPassword(head1User.uid);
-                                        alert(`Temporary password reset for ${head1User.name} to Galgotias@2026`);
+                                      onClick={async () => {
+                                        const newTemp = generateSecureTempPassword(10);
+                                        await resetUserPassword(head1User.uid, newTemp);
+                                        alert(`Temporary password generated for ${head1User.name}:\n\n${newTemp}\n\nPlease share this securely with the user.`);
                                       }}
                                       className="text-slate-400 hover:text-amber-600"
                                       title="Reset Password"
@@ -684,6 +686,7 @@ export default function AdminDashboard({ initialSubTab = 'requests' }) {
                                 setMappedEmail('');
                                 setMappedPhone('');
                                 setMappedRole('CLUB_HEAD');
+                                setTempPassword(generateSecureTempPassword(10));
                               }}
                               className="px-2.5 py-1 rounded-lg bg-red-50 text-red-800 hover:bg-red-100 font-bold text-[11px] inline-flex items-center gap-1 border border-red-200/60"
                             >
@@ -713,9 +716,10 @@ export default function AdminDashboard({ initialSubTab = 'requests' }) {
                                       {head2User.active ? 'Active' : 'Disabled'}
                                     </button>
                                     <button
-                                      onClick={() => {
-                                        resetUserPassword(head2User.uid);
-                                        alert(`Temporary password reset for ${head2User.name} to Galgotias@2026`);
+                                      onClick={async () => {
+                                        const newTemp = generateSecureTempPassword(10);
+                                        await resetUserPassword(head2User.uid, newTemp);
+                                        alert(`Temporary password generated for ${head2User.name}:\n\n${newTemp}\n\nPlease share this securely with the user.`);
                                       }}
                                       className="text-slate-400 hover:text-amber-600"
                                       title="Reset Password"
@@ -734,6 +738,7 @@ export default function AdminDashboard({ initialSubTab = 'requests' }) {
                                 setMappedEmail('');
                                 setMappedPhone('');
                                 setMappedRole('CLUB_HEAD');
+                                setTempPassword(generateSecureTempPassword(10));
                               }}
                               className="px-2.5 py-1 rounded-lg bg-red-50 text-red-800 hover:bg-red-100 font-bold text-[11px] inline-flex items-center gap-1 border border-red-200/60"
                             >

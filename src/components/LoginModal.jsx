@@ -289,28 +289,28 @@ export default function LoginModal({ isOpen, onClose }) {
                   <button
                     type="button"
                     onClick={() => {
-                      setIdentifier('admin@gei.edu');
-                      setPassword('Galgotias@2026');
+                      setIdentifier('admin@example.com');
+                      setPassword('CouncilDemo@2026');
                     }}
                     className="p-2 rounded-lg bg-slate-50 hover:bg-amber-50 border border-slate-200 hover:border-amber-300 transition-colors text-left"
                   >
                     <span className="block font-bold text-xs text-amber-800">Administrator</span>
-                    <span className="block text-[10px] text-slate-600 truncate">admin@gei.edu</span>
+                    <span className="block text-[10px] text-slate-600 truncate">admin@example.com</span>
                   </button>
                   <button
                     type="button"
                     onClick={() => {
-                      setIdentifier('club@gei.edu');
-                      setPassword('Galgotias@2026');
+                      setIdentifier('club@example.com');
+                      setPassword('CouncilDemo@2026');
                     }}
                     className="p-2 rounded-lg bg-slate-50 hover:bg-emerald-50 border border-slate-200 hover:border-emerald-300 transition-colors text-left"
                   >
                     <span className="block font-bold text-xs text-emerald-800">Club Head</span>
-                    <span className="block text-[10px] text-slate-600 truncate">club@gei.edu</span>
+                    <span className="block text-[10px] text-slate-600 truncate">club@example.com</span>
                   </button>
                 </div>
                 <p className="text-[10px] text-slate-600 mt-1.5 text-center">
-                  Password: <code className="text-slate-800 font-mono font-bold bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200">Galgotias@2026</code>
+                  Password: <code className="text-slate-800 font-mono font-bold bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200">CouncilDemo@2026</code>
                 </p>
               </div>
 
