@@ -1,0 +1,62 @@
+{
+  "name": "GEI Campus Resource & Event Management",
+  "short_name": "GEI Portal",
+  "description": "Galgotias Educational Institutions Resource and Event Booking Management Platform",
+  "id": "gei-campus-portal-pwa",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui", "browser"],
+  "orientation": "portrait-primary",
+  "background_color": "#1c0505",
+  "theme_color": "#991b1b",
+  "categories": ["education", "productivity", "utilities"],
+  "icons": [
+    {
+      "src": "./icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "./logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Auditorium Schedule",
+      "short_name": "Schedule",
+      "description": "View live campus event schedule",
+      "url": "./?tab=schedule",
+      "icons": [{ "src": "./icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Club Requests",
+      "short_name": "Requests",
+      "description": "Submit and check booking requests",
+      "url": "./?tab=club-requests",
+      "icons": [{ "src": "./icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Admin Approvals",
+      "short_name": "Approvals",
+      "description": "Review pending booking approvals",
+      "url": "./?tab=admin",
+      "icons": [{ "src": "./icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}

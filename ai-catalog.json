@@ -1,0 +1,60 @@
+{
+  "specVersion": "1.0",
+  "host": {
+    "displayName": "GEI Campus Resource & Event Management",
+    "publisherDomain": "gei-campus-portal.web.app",
+    "identifier": "did:web:gei-campus-portal.web.app",
+    "documentationUrl": "https://gei-campus-portal.web.app/llms.txt",
+    "logoUrl": "https://gei-campus-portal.web.app/logo-sm.webp"
+  },
+  "entries": [
+    {
+      "id": "urn:air:gei-campus-portal.web.app:mcp:schedule-server",
+      "identifier": "urn:air:gei-campus-portal.web.app:mcp:schedule-server",
+      "displayName": "GEI Campus Event & Schedule MCP Server",
+      "type": "application/mcp-server-card+json",
+      "url": "https://gei-campus-portal.web.app/.well-known/mcp.json",
+      "description": "Remote MCP server providing live schedule inspection and event verification for Galgotias Educational Institutions campus auditoriums and venues.",
+      "version": "1.0.0",
+      "tags": [
+        "campus",
+        "auditorium",
+        "schedule",
+        "events",
+        "gei"
+      ],
+      "capabilities": [
+        "ScheduleLookup",
+        "EventVerification"
+      ],
+      "representativeQueries": [
+        "check GCET Block C Main Auditorium booking schedule",
+        "find available campus venue slots for student council events",
+        "verify confirmed student council event reservations"
+      ]
+    },
+    {
+      "id": "urn:air:gei-campus-portal.web.app:skill:club-registry",
+      "identifier": "urn:air:gei-campus-portal.web.app:skill:club-registry",
+      "displayName": "GEI Student Council Club Directory",
+      "type": "application/ai-skill+md",
+      "url": "https://gei-campus-portal.web.app/llms.txt",
+      "description": "Official documentation and registry of 21 Student Council GCET clubs, event governance rules, and resource requisition guidelines.",
+      "version": "1.0.0",
+      "tags": [
+        "student-council",
+        "clubs",
+        "gcet",
+        "governance"
+      ],
+      "capabilities": [
+        "ClubLookup",
+        "CouncilDirectory"
+      ],
+      "representativeQueries": [
+        "list all 21 student council clubs at GCET",
+        "what are the rules for auditorium equipment requisition at GEI"
+      ]
+    }
+  ]
+}

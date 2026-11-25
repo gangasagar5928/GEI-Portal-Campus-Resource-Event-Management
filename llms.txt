@@ -1,0 +1,8 @@
+# GEI Campus Resource & Event Management System
+
+> Official resource booking and auditorium management platform for Galgotias Educational Institutions (GEI) Student Council.
+
+## Main Services
+- [Campus Event & Auditorium Schedule](https://gei-campus-portal.web.app/?tab=schedule): Real-time verified booking schedule for GCET Block C Main Auditorium, Block E Mini Auditorium, and Seminar Halls.
+- [Student Council Club Portal](https://gei-campus-portal.web.app/?tab=club-requests): Venue requisition submission and real-time status tracking for 21 student council clubs.
+- [Administrative Approval System](https://gei-campus-portal.web.app/?tab=admin): Role-based multi-tier approval workflow for administrative leadership and executive approvers.

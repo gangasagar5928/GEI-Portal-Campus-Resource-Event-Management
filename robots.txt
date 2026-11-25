@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://gei-campus-portal.web.app/sitemap.xml
